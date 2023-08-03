@@ -2,7 +2,7 @@
 const roomAllocation = (sequelize, DataTypes) =>
   sequelize.define("AllRoomAllocation", {
     allocationId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
@@ -12,7 +12,7 @@ const roomAllocation = (sequelize, DataTypes) =>
       allowNull: false,
     },
     room_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     check_in_date: {
