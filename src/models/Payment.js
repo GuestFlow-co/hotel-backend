@@ -1,6 +1,5 @@
-const { DataTypes } = require('sequelize');
 
-const Payments = sequelize.define('payments', {
+const Payments = (sequelize,DataTypes)=>sequelize.define('payments', {
   payment_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -20,7 +19,5 @@ const Payments = sequelize.define('payments', {
     allowNull: false,
   },
 });
-
-ayments.belongsTo(Bookings, { foreignKey: 'booking_id' });
 
 module.exports = Payments;
