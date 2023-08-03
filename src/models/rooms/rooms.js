@@ -1,6 +1,6 @@
 'use srtict'
 
-const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
+const Rooms = (sequelize, DataTypes) => sequelize.define('Rooms', {
     room_number: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -14,4 +14,4 @@ const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
     status:{type:DataTypes.STRING}
 
 })
-module.exports=Room
+module.exports=Rooms
