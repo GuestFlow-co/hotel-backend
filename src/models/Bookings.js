@@ -1,8 +1,7 @@
 'use strict';
 
-const { DataTypes } = require('sequelize');
 
-const Bookings = sequelize.define('bookings', {
+const Bookings = (sequelize,DataTypes)=>sequelize.define('bookings', {
   booking_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

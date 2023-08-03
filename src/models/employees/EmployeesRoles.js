@@ -7,7 +7,7 @@ const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
     },
     role_name: {
         type: DataTypes.STRING,
-        allowNull: flase,
+        allowNull: false,
     },
     
 

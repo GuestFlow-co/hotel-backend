@@ -1,9 +1,7 @@
 "use strict";
 
-const {dataBase, DataTypes} = require(".");
-// const collection = require("../collection/collection");
 
-const room_features = dataBase.define('room_features' , {
+const room_features = (sequelize,DataTypes)=>sequelize.define('room_features' , {
     feature_id:{
          type : DataTypes.INTEGER,
          allowNull : false
