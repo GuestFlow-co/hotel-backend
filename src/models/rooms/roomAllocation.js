@@ -1,7 +1,7 @@
 "use srtict";
 const roomAllocation = (sequelize, DataTypes) =>
-  sequelize.define("AllRoomAllocation", {
-    allocationId: {
+  sequelize.define("allocation", {
+    allocation_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,

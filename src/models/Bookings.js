@@ -2,7 +2,7 @@
 
 const Bookings = (sequelize, DataTypes) =>
   sequelize.define("bookings", {
-    booking_id: {
+    bookings_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -16,29 +16,29 @@ const Bookings = (sequelize, DataTypes) =>
     //     key: 'customer_id',
     //   },
     // },
-    room_number: {
+    room1: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Rooms",
-        key: "room_number",
-      },
+      allowNull: true,
+      // references: {
+      //   model: "Rooms",
+      //   key: "room_number",
+      // },
     },
     check_in_date: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     check_out_date: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     total_amount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     payment_status: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   });
 

@@ -1,5 +1,5 @@
 const employeeRole = (sequelize, DataTypes) => sequelize.define('employeeRole', {
-    role_id: {
+    employeeRole_id: {
         type:DataTypes.INTEGER,
         allowNull:false,
         primaryKey: true,

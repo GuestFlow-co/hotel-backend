@@ -1,6 +1,6 @@
 "use strict";
 const Services = (sequelize, DataTypes) =>
-  sequelize.define("allServices", {
+  sequelize.define("service", {
     service_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

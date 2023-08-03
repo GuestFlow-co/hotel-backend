@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  const RoomTypeFeature = sequelize.define("RoomTypeFeature", {
+  const RoomTypeFeature = sequelize.define("type", {
     type_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
