@@ -1,7 +1,7 @@
 'use srtict'
 
 const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
-    roomNumber: {
+    room_number: {
         type: DataTypes.INTEGER,
         allowNull: false,
         unieqe: true
