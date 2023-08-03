@@ -2,7 +2,7 @@
 
 const room_types = (sequelize, DataTypes) =>
   sequelize.define("room_types", {
-    type_id: {
+    room_types_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

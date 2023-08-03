@@ -55,8 +55,8 @@ const EmployeeRoleAssignmentModel =
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
 
-BookingModel.belongsTo(RoomModel, { foreignKey: "room_number" });
-RoomModel.hasMany(BookingModel, { foreignKey: "room_number" });
+BookingModel.belongsTo(RoomModel, { foreignKey: "room1" });
+RoomModel.hasMany(BookingModel, { foreignKey: "room1" });
 
 BookingModel.hasMany(PaymentModel, { foreignKey: "booking_id" });
 PaymentModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
@@ -111,7 +111,7 @@ module.exports = {
   Rooms: new DataCollection(RoomModel),
   Bookings: new DataCollection(BookingModel),
   Payments: new DataCollection(PaymentModel),
-  Employees: new DataCollection(EmployeeModel),
+  Employee: new DataCollection(EmployeeModel),
   Services: new DataCollection(ServiceModel),
   BookedServices: new DataCollection(BookedServiceModel),
   RoomTypes: new DataCollection(RoomTypeModel),
@@ -120,6 +120,7 @@ module.exports = {
   RoomAllocations: new DataCollection(RoomAllocationModel),
   EmployeeRoles: new DataCollection(EmployeeRoleModel),
   EmployeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
+  RoomModel
   // Amenities,
   // HotelAmenities,
 };

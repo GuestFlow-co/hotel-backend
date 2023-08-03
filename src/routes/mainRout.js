@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-
+const model=require("../models/index")
 const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
 
@@ -14,8 +14,15 @@ router.get("/:model/:id", handleGetOne);
 router.post("/:model", handleCreate);
 router.put("/:model/:id", handleUpdate);
 router.delete("/:model/:id", handleDelete);
+router.get("/:model/getAllRooms/:id", handleAllRooms)
 
 
+async function handleAllRooms(req, res){
+  const id = req.params.id;
+  const record= await req.model.readAll(id, model.RoomModel)
+  res.status(200).json(record);
+
+}
 async function handleGetAll(req, res, next) {
     try {
       let allRecords = await req.model.get();
@@ -28,13 +35,16 @@ async function handleGetAll(req, res, next) {
 
   async function handleGetOne(req, res, next) {
     try {
-      let theRecord = await req.model.get(req.params.id);
+     let a= req.params.id;
+    
+      let theRecord = await req.model.get(a);
       res.status(200).json(theRecord);
     } catch (err) {
       next(err);
     }
   }
 
+  
   async function handleCreate(req, res, next) {
     try {
       let newRecord = await req.model.create(req.body);
