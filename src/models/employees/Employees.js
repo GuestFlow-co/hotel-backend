@@ -1,7 +1,7 @@
 "use srtict";
 const Employees = (sequelize, DataTypes) =>
   sequelize.define("AllEmployees", {
-    employeeId: {
+    employee_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,

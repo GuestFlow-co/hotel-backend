@@ -1,4 +1,4 @@
-const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
+const employeeRole = (sequelize, DataTypes) => sequelize.define('employeeRole', {
     role_id: {
         type:DataTypes.INTEGER,
         allowNull:false,
@@ -12,4 +12,4 @@ const Room = (sequelize, DataTypes) => sequelize.define('hotelRooms', {
     
 
 })
-module.exports=Room
+module.exports=employeeRole
