@@ -17,7 +17,7 @@ const Bookings = (sequelize, DataTypes) =>
     //   },
     // },
     room_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "Rooms",
