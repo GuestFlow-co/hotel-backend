@@ -29,10 +29,22 @@ class DataCollection {
   delete(id) {
     return this.model.destroy({ where: { [`${this.model.name.toLowerCase()}_id`]: id } });
   }
-  async readAll(id, model) {
+  async readOne(id, model,model1) {
     const records = await this.model.findOne({
     where: { [`${this.model.name.toLowerCase()}_id`]: id } ,
-      include: model
+    include: [
+      { model: model },
+      { model: model1 }
+    ]
+    });
+    return records;
+  }
+  async readAll(model, model1) {
+    const records = await this.model.findAll({
+      include: [
+        { model: model },
+        { model: model1 }
+      ]
     });
     return records;
   }

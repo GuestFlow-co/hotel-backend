@@ -10,7 +10,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Rooms', {
 
     },
     room_number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
     },

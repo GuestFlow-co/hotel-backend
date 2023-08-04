@@ -6,10 +6,7 @@ const Payments = (sequelize,DataTypes)=>sequelize.define('payments', {
     autoIncrement: true,
     allowNull: false,
   },
-  booking_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
+ 
   payment_date: {
     type: DataTypes.DATE,
     allowNull: false,

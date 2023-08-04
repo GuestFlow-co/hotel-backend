@@ -55,11 +55,11 @@ const EmployeeRoleAssignmentModel =
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
 
-BookingModel.belongsTo(RoomModel, { foreignKey: "room1" });
-RoomModel.hasMany(BookingModel, { foreignKey: "room1" });
+RoomModel.hasMany(BookingModel, { foreignKey: "theRoomID" });
+BookingModel.belongsTo(RoomModel, { foreignKey: "theRoomID" });
 
-BookingModel.hasMany(PaymentModel, { foreignKey: "booking_id" });
-PaymentModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
+PaymentModel.hasMany(BookingModel, { foreignKey: "paymentID" });
+BookingModel.belongsTo(PaymentModel, { foreignKey: "paymentID" });
 
 BookingModel.belongsToMany(ServiceModel, {
   through: BookedServiceModel,
@@ -108,19 +108,20 @@ RoomAllocationModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
 module.exports = {
   db: sequelize,
   users: new DataCollection(users),
-  Rooms: new DataCollection(RoomModel),
-  Bookings: new DataCollection(BookingModel),
-  Payments: new DataCollection(PaymentModel),
-  Employee: new DataCollection(EmployeeModel),
-  Services: new DataCollection(ServiceModel),
-  BookedServices: new DataCollection(BookedServiceModel),
-  RoomTypes: new DataCollection(RoomTypeModel),
-  RoomFeatures: new DataCollection(RoomFeatureModel),
-  RoomTypeFeatures: new DataCollection(RoomTypeFeatureModel),
-  RoomAllocations: new DataCollection(RoomAllocationModel),
-  EmployeeRoles: new DataCollection(EmployeeRoleModel),
-  EmployeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
-  RoomModel
+  rooms: new DataCollection(RoomModel),
+  bookings: new DataCollection(BookingModel),
+  payments: new DataCollection(PaymentModel),
+  employee: new DataCollection(EmployeeModel),
+  services: new DataCollection(ServiceModel),
+  bookedServices: new DataCollection(BookedServiceModel),
+  roomTypes: new DataCollection(RoomTypeModel),
+  roomFeatures: new DataCollection(RoomFeatureModel),
+  roomTypeFeatures: new DataCollection(RoomTypeFeatureModel),
+  roomAllocations: new DataCollection(RoomAllocationModel),
+  employeeRoles: new DataCollection(EmployeeRoleModel),
+  employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
+  RoomModel,
+  PaymentModel
   // Amenities,
   // HotelAmenities,
 };
