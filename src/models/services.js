@@ -1,4 +1,4 @@
-"use strict";
+  "use strict";
 const Services = (sequelize, DataTypes) =>
   sequelize.define("service", {
     service_id: {

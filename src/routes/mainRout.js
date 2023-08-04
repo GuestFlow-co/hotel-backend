@@ -27,7 +27,7 @@ async function handleGetAll(req, res, next) {
     try {
      if (req.model.modelName == "bookings") {
         // const id = req.params.id;
-        const record = await req.model.readAll( model.RoomModel,model.PaymentModel,model.BookedServiceModel)
+        const record = await req.model.readAll( model.RoomModel,model.PaymentModel,model.ServiceModel)
         res.status(200).json(record);
       } else {
         let allRecords = await req.model.get();
@@ -45,7 +45,7 @@ async function handleGetAll(req, res, next) {
     try {
       if (req.model.modelName == "bookings") {
         const id = req.params.id;
-        const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel,model.BookedServiceModel);
+        const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel,model.ServiceModel);
         res.status(200).json(record);
       } else {
         // console.log("000000000000000000000",typeof req.model.modelName );
