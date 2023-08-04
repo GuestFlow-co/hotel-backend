@@ -6,12 +6,18 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
+
     },
     service_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // primaryKey: true,
     },
+    AllService:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    }
+
   });
 
   return BookedService;
