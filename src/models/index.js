@@ -63,11 +63,13 @@ BookingModel.belongsTo(PaymentModel, { foreignKey: "paymentID" });
 
 BookingModel.belongsToMany(ServiceModel, {
   through: BookedServiceModel,
-  foreignKey: "booking_id",
+  // through:bookedServices,
+  foreignKey: "AllService",
 });
 ServiceModel.belongsToMany(BookingModel, {
   through: BookedServiceModel,
-  foreignKey: "service_id",
+  // through:bookedServices,
+  foreignKey: "AllService",
 });
 
 EmployeeModel.belongsToMany(EmployeeRoleModel, {
@@ -101,10 +103,6 @@ RoomAllocationModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
 // });
 
 
-
-
-
-
 module.exports = {
   db: sequelize,
   users: new DataCollection(users),
@@ -121,7 +119,11 @@ module.exports = {
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
   RoomModel,
-  PaymentModel
+  PaymentModel,
+  // bookedServices,
+  ServiceModel,
+  BookedServiceModel
+
   // Amenities,
   // HotelAmenities,
 };
