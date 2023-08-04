@@ -7,6 +7,11 @@ const Services = (sequelize, DataTypes) =>
       primaryKey: true,
       autoIncrement: true,
     },
+    AllService:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+
+    },
     serviceName: {
       type: DataTypes.STRING,
       allowNull: false,

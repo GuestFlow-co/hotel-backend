@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
     service_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      // primaryKey: true,
     },
   });
 
