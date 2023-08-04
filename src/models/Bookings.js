@@ -16,7 +16,11 @@ const Bookings = (sequelize, DataTypes) =>
     //     key: 'customer_id',
     //   },
     // },
-    room1: {
+    paymentID:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    theRoomID: {
       type: DataTypes.INTEGER,
       allowNull: true,
       // references: {

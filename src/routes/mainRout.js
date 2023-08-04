@@ -14,19 +14,27 @@ router.get("/:model/:id", handleGetOne);
 router.post("/:model", handleCreate);
 router.put("/:model/:id", handleUpdate);
 router.delete("/:model/:id", handleDelete);
-router.get("/:model/getAllRooms/:id", handleAllRooms)
+// router.get("/:model/getAllRooms/:id", handleAllRooms)
 
 
-async function handleAllRooms(req, res){
-  const id = req.params.id;
-  const record= await req.model.readAll(id, model.RoomModel)
-  res.status(200).json(record);
+// async function handleAllRooms(req, res){
+//   const id = req.params.id;
+//   const record= await req.model.readAll(id, model.RoomModel)
+//   res.status(200).json(record);
 
-}
+// }
 async function handleGetAll(req, res, next) {
     try {
-      let allRecords = await req.model.get();
-      res.status(200).json(allRecords);
+     if (req.model.modelName == "bookings") {
+        // const id = req.params.id;
+        const record = await req.model.readAll( model.RoomModel,model.PaymentModel);
+        res.status(200).json(record);
+      } else {
+        let allRecords = await req.model.get();
+        res.status(200).json(allRecords);
+
+      }
+     
     } catch (err) {
       next(err);
     }
@@ -35,15 +43,21 @@ async function handleGetAll(req, res, next) {
 
   async function handleGetOne(req, res, next) {
     try {
-     let a= req.params.id;
-    
-      let theRecord = await req.model.get(a);
-      res.status(200).json(theRecord);
+      if (req.model.modelName == "bookings") {
+        const id = req.params.id;
+        const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel);
+        res.status(200).json(record);
+      } else {
+        // console.log("000000000000000000000",typeof req.model.modelName );
+        let id = req.params.id;
+        let theRecord = await req.model.get(id);
+        res.status(200).json(theRecord);
+      }
     } catch (err) {
       next(err);
     }
   }
-
+  
   
   async function handleCreate(req, res, next) {
     try {
