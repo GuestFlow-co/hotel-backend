@@ -34,18 +34,9 @@ const ServiceModel = require("./services")(sequelize, DataTypes);
 const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
-const RoomTypeFeatureModel = require("./rooms/room_type_features")(
-  sequelize,
-  DataTypes
-);
-const RoomAllocationModel = require("./rooms/roomAllocation")(
-  sequelize,
-  DataTypes
-);
-const EmployeeRoleModel = require("./employees/EmployeesRoles")(
-  sequelize,
-  DataTypes
-);
+const RoomTypeFeatureModel = require("./rooms/room_type_features")(sequelize,DataTypes);
+const RoomAllocationModel = require("./rooms/roomAllocation")(sequelize, DataTypes);
+const EmployeeRoleModel = require("./employees/EmployeesRoles")(sequelize, DataTypes);
 const EmployeeRoleAssignmentModel =
   require("./employees/Employee_Role_Assignments")(sequelize, DataTypes);
 // const AmenityModel = require("./Amenities")(sequelize, DataTypes);
@@ -63,13 +54,11 @@ BookingModel.belongsTo(PaymentModel, { foreignKey: "paymentID" });
 
 BookingModel.belongsToMany(ServiceModel, {
   through: BookedServiceModel,
-  // through:bookedServices,
-  foreignKey: "AllService",
+  foreignKey: "bookings_id",
 });
 ServiceModel.belongsToMany(BookingModel, {
   through: BookedServiceModel,
-  // through:bookedServices,
-  foreignKey: "AllService",
+  foreignKey: "service_id",
 });
 
 EmployeeModel.belongsToMany(EmployeeRoleModel, {
