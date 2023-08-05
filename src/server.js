@@ -9,7 +9,9 @@ app.use(cors());
 const pageNotFound = require("./errorhandler/404");
 const serverError = require("./errorhandler/500");
 const authRoutes = require("./routes/authRoute");
-const mainRout = require("./routes/mainRout");
+const mainRout = require("./routes/mainRoute");
+const protectedRoute = require("./routes/protected-route");
+
 
 
  app.use(express.json());
@@ -18,6 +20,8 @@ const mainRout = require("./routes/mainRout");
 
 app.use(authRoutes);
 app.use(mainRout);
+app.use("/api",protectedRoute);
+
 
 
 app.use("*", pageNotFound);
