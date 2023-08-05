@@ -41,35 +41,41 @@ class DataCollection {
       { model: model },
       { model: model1 },
       {
-        model: model2, // Assuming model2 is the instance of Booked_Services
+        model: model2, 
       },
     ],
     });
     return records;
   }
-  // async readAll(model, model1,model2) {
-  //   const records = await this.model.findAll({
-  //     include: [
-  //       { model: model },
-  //       { model: model1 },
-  //       {
-  //         model: model2,
-  //         through:Booked_Services,
-  //       },
-  //     ]
-  //   });
-  //   return records;
-  // }
+  
   async readAll(model, model1, model2) {
     const records = await this.model.findAll({
       include: [
         { model: model },
         { model: model1 },
         {
-          model: model2, // Assuming model2 is the instance of Booked_Services
+          model: model2, 
         },
       ],
     });
+    return records;
+  }
+  async findAll(model) {
+    const records = await this.model.findAll({
+      include: [
+        { model: model }
+      ],
+    });
+    return records;
+  }
+  async findone(id,model) {
+    const records = await this.model.findOne({
+      where: { [`${this.model.name.toLowerCase()}_id`]: id } ,
+      include: [
+        { model: model },
+      
+      ],
+      });
     return records;
   }
   

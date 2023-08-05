@@ -4,7 +4,7 @@ const express = require("express");
 const model=require("../models/index")
 const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
-
+const {RoomFeatureModel,EmployeeRoleModel,EmployeeModel}=require('../models/index')
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
@@ -29,6 +29,18 @@ async function handleGetAll(req, res, next) {
         // const id = req.params.id;
         const record = await req.model.readAll( model.RoomModel,model.PaymentModel,model.ServiceModel)
         res.status(200).json(record);
+      } else if(req.model.modelName == "rooms" ){
+        const records = await req.model.findAll(
+          RoomFeatureModel
+        )
+        res.status(200).json(records);
+
+      }else if(req.model.modelName == "employee"){
+        const records = await req.model.findAll(
+          EmployeeRoleModel
+        )
+        res.status(200).json(records);
+
       } else {
         let allRecords = await req.model.get();
         res.status(200).json(allRecords);
@@ -43,12 +55,19 @@ async function handleGetAll(req, res, next) {
 
   async function handleGetOne(req, res, next) {
     try {
+      const id = req.params.id;
       if (req.model.modelName == "bookings") {
-        const id = req.params.id;
         const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel,model.ServiceModel);
         res.status(200).json(record);
+      }else if(req.model.modelName == "rooms" ){
+        const records = await req.model.findone(id,RoomFeatureModel )
+        res.status(200).json(records);
+
+      }else if(req.model.modelName == "employee"){
+        const records = await req.model.findone(id,EmployeeRoleModel)
+        res.status(200).json(records);
+
       } else {
-        // console.log("000000000000000000000",typeof req.model.modelName );
         let id = req.params.id;
         let theRecord = await req.model.get(id);
         res.status(200).json(theRecord);

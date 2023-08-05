@@ -11,6 +11,10 @@ const Employees = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       allowNull: false,
     },
+    roolsID:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
