@@ -10,7 +10,7 @@ const pageNotFound = require("./errorhandler/404");
 const serverError = require("./errorhandler/500");
 const authRoutes = require("./routes/authRoute");
 const mainRout = require("./routes/mainRoute");
-const protectedRoute = require("./routes/protected-route");
+const protectedRoute = require("./routes/protectedRoute");
 
 
 

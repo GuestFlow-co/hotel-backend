@@ -14,7 +14,7 @@ router.param("model", bearer,modelsMiddleware);
 
 router.get("/:model",bearer, handleGetAll);
 router.get("/:model/:id",bearer, handleGetOne);
-router.post("/:model",bearer,acl ("create"), handleCreate);
+router.post("/:model",bearer, this.model === 'bookings' ? acl('read') : acl('delete'), handleCreate);
 router.put("/:model/:id",bearer,acl ("update"), handleUpdate);
 router.delete("/:model/:id",bearer,acl ("delete"), handleDelete);
 // router.get("/:model/getAllRooms/:id", handleAllRooms)

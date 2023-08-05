@@ -32,6 +32,7 @@ const PaymentModel = require("./Payment")(sequelize, DataTypes);
 const EmployeeModel = require("./employees/Employees")(sequelize, DataTypes);
 const ServiceModel = require("./services")(sequelize, DataTypes);
 const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
+const RoomsFratuer=require("./RoomsFratuer")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
 const RoomTypeFeatureModel = require("./rooms/room_type_features")(sequelize,DataTypes);
@@ -61,21 +62,23 @@ ServiceModel.belongsToMany(BookingModel, {
   foreignKey: "service_id",
 });
 
-EmployeeModel.belongsToMany(EmployeeRoleModel, {
-  through: EmployeeRoleAssignmentModel,
-  foreignKey: "employee_id",
-});
-EmployeeRoleModel.belongsToMany(EmployeeModel, {
-  through: EmployeeRoleAssignmentModel,
-  foreignKey: "role_id",
-});
+// EmployeeModel.belongsToMany(EmployeeRoleModel, {
+//   through: EmployeeRoleAssignmentModel,
+//   foreignKey: "employee_id",
+// });
+// EmployeeRoleModel.belongsToMany(EmployeeModel, {
+//   through: EmployeeRoleAssignmentModel,
+//   foreignKey: "role_id",
+// });
+EmployeeRoleModel.hasMany(EmployeeModel, { foreignKey: "roolsID" });
+EmployeeModel.belongsTo(EmployeeRoleModel, { foreignKey: "roolsID" });
 
-RoomTypeModel.belongsToMany(RoomFeatureModel, {
-  through: RoomTypeFeatureModel,
-  foreignKey: "type_id",
+RoomModel.belongsToMany(RoomFeatureModel, {
+  through: RoomsFratuer,
+  foreignKey: "rooms_id",
 });
-RoomFeatureModel.belongsToMany(RoomTypeModel, {
-  through: RoomTypeFeatureModel,
+RoomFeatureModel.belongsToMany(RoomModel, {
+  through: RoomsFratuer,
   foreignKey: "feature_id",
 });
 
@@ -107,12 +110,14 @@ module.exports = {
   roomAllocations: new DataCollection(RoomAllocationModel),
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
+  RoomsFratuer:new DataCollection(RoomsFratuer),
   RoomModel,
   PaymentModel,
-  // bookedServices,
-  ServiceModel,
-  BookedServiceModel
-
+  EmployeeModel,
+    ServiceModel,
+  BookedServiceModel,
+  RoomFeatureModel,
+  EmployeeRoleModel
   // Amenities,
   // HotelAmenities,
 };

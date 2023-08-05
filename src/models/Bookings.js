@@ -8,11 +8,7 @@ const Bookings = (sequelize, DataTypes) =>
       autoIncrement: true,
       allowNull: false,
     },
-    AllService:{
-      type: DataTypes.INTEGER,
-      allowNull: true,
-
-    },
+    
     // customer_id: {
     //   type: DataTypes.INTEGER,
     //   allowNull: false,
