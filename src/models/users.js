@@ -3,15 +3,19 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const SECRET = process.env.SECRET || "secert";
+const SECRET = process.env.SECRET || "secret";
 
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define("user", {
-    username: { type: DataTypes.STRING, allowNull:false, unique: true },
-    password: { type: DataTypes.STRING, allowNull:false},
+    firstName: { type: DataTypes.STRING, allowNull: false },
+    lastName: { type: DataTypes.STRING, allowNull: false },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    phoneNumber: { type: DataTypes.STRING, allowNull: false, unique: true },
+    username: { type: DataTypes.STRING, allowNull: false, unique: true },
+    password: { type: DataTypes.STRING, allowNull: false },
     role: {
-      type: DataTypes.ENUM("user", "admin"),
-      allowNull:false,
+      type: DataTypes.ENUM("user", "employee", "admin"),
+      allowNull: false,
       defaultValue: "user",
     },
     token: {
@@ -29,6 +33,7 @@ const userModel = (sequelize, DataTypes) => {
       get() {
         const acl = {
           user: ["read"],
+          employee: ["read", "create","update"],
           admin: ["read", "create", "update", "delete"],
         };
         return acl[this.role];
