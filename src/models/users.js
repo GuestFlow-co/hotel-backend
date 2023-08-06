@@ -7,6 +7,12 @@ const SECRET = process.env.SECRET || "secret";
 
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define("user", {
+    user_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     firstName: { type: DataTypes.STRING, allowNull: false },
     lastName: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
