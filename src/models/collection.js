@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
 class DataCollection {
-
   constructor(model) {
     this.model = model;
   }
 
   get(id) {
     if (id) {
-      console.log("---"+this.model)
-      return this.model.findOne({ where: { [`${this.model.name.toLowerCase()}_id`]: id } });
-    }
-    else {
+      console.log("---" + this.model);
+      return this.model.findOne({
+        where: { [`${this.model.name.toLowerCase()}_id`]: id },
+      });
+    } else {
       return this.model.findAll({});
     }
   }
@@ -21,76 +21,54 @@ class DataCollection {
   }
 
   update(id, data) {
-    return this.model.findOne({ where: { [`${this.model.name.toLowerCase()}_id`]: id } })
-      .then(record => record.update(data));
+    return this.model
+      .findOne({ where: { [`${this.model.name.toLowerCase()}_id`]: id } })
+      .then((record) => record.update(data));
   }
 
   delete(id) {
-    return this.model.destroy({ where: { [`${this.model.name.toLowerCase()}_id`]: id } });
+    return this.model.destroy({
+      where: { [`${this.model.name.toLowerCase()}_id`]: id },
+    });
   }
-  async readOne(id, model,model1,model2,model3) {
+  async readOne(id, model, model1, model2, model3) {
     const records = await this.model.findOne({
-    where: { [`${this.model.name.toLowerCase()}_id`]: id } ,
-    include: [
-      { model: model },
-      { model: model1 },
-      { model: model2, 
-      },
-      { model: model3 },
-    ],
+      where: { [`${this.model.name.toLowerCase()}_id`]: id },
+      include: [
+        { model: model },
+        { model: model1 },
+        { model: model2 },
+        { model: model3 },
+      ],
     });
     return records;
   }
-  
-  async readAll(model, model1, model2,model3) {
+
+  async readAll(model, model1, model2, model3) {
     const records = await this.model.findAll({
       include: [
         { model: model },
         { model: model1 },
-        { model: model2, 
-        },
-        { model: model3},
+        { model: model2 },
+        { model: model3 },
       ],
     });
-    return records;
-  }
-  
-  async findAll(model) {
-    const records = await this.model.findAll({
-      include: [
-        { model: model }
-      ],
-    });
-    return records;
-  }
-  async findone(id,model) {
-    const records = await this.model.findOne({
-      where: { [`${this.model.name.toLowerCase()}_id`]: id } ,
-      include: [
-        { model: model },    
-      ],
-      });
     return records;
   }
 
-  // async findAllCustomers(model) {
-  //   const records = await this.model.findAll({
-  //     include: [
-  //       { model: model }
-  //     ],
-  //   });
-  //   return records;
-  // }
-  // async findoneCustomer(id,model) {
-  //   const records = await this.model.findOne({
-  //     where: { [`${this.model.name.toLowerCase()}_id`]: id } ,
-  //     include: [
-  //       { model: model},
-  //     ],
-  //     });
-  //   return records;
-  // }
-  
+  async findAll(model) {
+    const records = await this.model.findAll({
+      include: [{ model: model }],
+    });
+    return records;
+  }
+  async findone(id, model) {
+    const records = await this.model.findOne({
+      where: { [`${this.model.name.toLowerCase()}_id`]: id },
+      include: [{ model: model }],
+    });
+    return records;
+  }
 }
 
 module.exports = DataCollection;
