@@ -39,8 +39,8 @@ const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
 const RoomTypeFeatureModel = require("./rooms/room_type_features")(sequelize,DataTypes);
 const RoomAllocationModel = require("./rooms/roomAllocation")(sequelize, DataTypes);
 const EmployeeRoleModel = require("./employees/EmployeesRoles")(sequelize, DataTypes);
-const EmployeeRoleAssignmentModel =
-  require("./employees/Employee_Role_Assignments")(sequelize, DataTypes);
+const EmployeeRoleAssignmentModel = require("./employees/Employee_Role_Assignments")(sequelize, DataTypes);
+const CustomerModel = require('./users')(sequelize, DataTypes);
 // const AmenityModel = require("./Amenities")(sequelize, DataTypes);
 // const HotelAmenityModel = require("./Hotel_Amenities")(sequelize, DataTypes);
 
@@ -48,6 +48,9 @@ const EmployeeRoleAssignmentModel =
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
 ResetToken.belongsTo(users, { foreignKey: 'userID' });
+
+CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
+BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
 
 RoomModel.hasMany(BookingModel, { foreignKey: "theRoomID" });
 BookingModel.belongsTo(RoomModel, { foreignKey: "theRoomID" });
@@ -72,6 +75,7 @@ ServiceModel.belongsToMany(BookingModel, {
 //   through: EmployeeRoleAssignmentModel,
 //   foreignKey: "role_id",
 // });
+
 EmployeeRoleModel.hasMany(EmployeeModel, { foreignKey: "roolsID" });
 EmployeeModel.belongsTo(EmployeeRoleModel, { foreignKey: "roolsID" });
 
@@ -114,10 +118,12 @@ module.exports = {
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
   RoomsFratuer:new DataCollection(RoomsFratuer),
+  customer: new DataCollection(CustomerModel),
+  CustomerModel,
   RoomModel,
   PaymentModel,
   EmployeeModel,
-    ServiceModel,
+  ServiceModel,
   BookedServiceModel,
   RoomFeatureModel,
   EmployeeRoleModel

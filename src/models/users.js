@@ -9,9 +9,10 @@ const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define("user", {
     user_id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
+      primaryKey: true,
+      unique: true,
+      autoIncrement: true,
     },
     firstName: { type: DataTypes.STRING, allowNull: false },
     lastName: { type: DataTypes.STRING, allowNull: false },
@@ -39,7 +40,7 @@ const userModel = (sequelize, DataTypes) => {
       get() {
         const acl = {
           user: ["read"],
-          employee: ["read", "create","update"],
+          employee: ["read", "create", "update"],
           admin: ["read", "create", "update", "delete"],
         };
         return acl[this.role];
