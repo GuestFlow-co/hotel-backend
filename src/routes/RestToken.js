@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 const { ResetToken } = require('../models');
 const { users } = require('../models'); // Ensure correct path
 const resetTokenValidator = require('../middlewares/rest');
+const bcrypt = require("bcrypt");
+
 
 const router = express.Router();
 
@@ -65,7 +67,8 @@ router.post('/resetPassword/:token', resetTokenValidator, async (req, res) => {
 
     if (user) {
       // Update user's password
-      user.password = newPassword;
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
       await user.save();
 
       // Delete the used reset token
