@@ -47,7 +47,7 @@ const EmployeeRoleAssignmentModel =
 // Define relationships
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
-ResetToken.belongsTo(users, { foreignKey: 'user_id' });
+ResetToken.belongsTo(users, { foreignKey: 'userID' });
 
 RoomModel.hasMany(BookingModel, { foreignKey: "theRoomID" });
 BookingModel.belongsTo(RoomModel, { foreignKey: "theRoomID" });

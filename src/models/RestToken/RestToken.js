@@ -4,13 +4,10 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
 const ResetToken = sequelize.define('ResetToken', {
   // ResetToken model fields
-  // user_id: {
-  //   type: DataTypes.INTEGER, // Adjust the data type if necessary
-  //   allowNull: false,
-  //   references: {
-  //     model: 'users', // Make sure this matches the actual table name
-  //     key: 'id',
-  //   }},
+  userID:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   token: {
     type: DataTypes.STRING,
     allowNull: false,
