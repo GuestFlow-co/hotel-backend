@@ -5,6 +5,7 @@ const model=require("../models/index")
 const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
 const {RoomFeatureModel,EmployeeRoleModel,EmployeeModel}=require('../models/index')
+const CustomerModel = require('../models/index');
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
@@ -27,7 +28,7 @@ async function handleGetAll(req, res, next) {
     try {
      if (req.model.modelName == "bookings") {
         // const id = req.params.id;
-        const record = await req.model.readAll( model.RoomModel,model.PaymentModel,model.ServiceModel)
+        const record = await req.model.readAll( model.RoomModel,model.PaymentModel,model.ServiceModel,model.CustomerModel)
         res.status(200).json(record);
       } else if(req.model.modelName == "rooms" ){
         const records = await req.model.findAll(
@@ -41,7 +42,15 @@ async function handleGetAll(req, res, next) {
         )
         res.status(200).json(records);
 
-      } else {
+      } 
+      // else if(req.model.modelName == "customer"){
+      //   const records = await req.model.findAll(
+      //     CustomerModel
+      //   )
+      //   res.status(200).json(records);
+
+      // }
+      else {
         let allRecords = await req.model.get();
         res.status(200).json(allRecords);
 
@@ -57,7 +66,7 @@ async function handleGetAll(req, res, next) {
     try {
       const id = req.params.id;
       if (req.model.modelName == "bookings") {
-        const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel,model.ServiceModel);
+        const record = await req.model.readOne(id, model.RoomModel,model.PaymentModel,model.ServiceModel, model.CustomerModel);
         res.status(200).json(record);
       }else if(req.model.modelName == "rooms" ){
         const records = await req.model.findone(id,RoomFeatureModel )
@@ -67,11 +76,19 @@ async function handleGetAll(req, res, next) {
         const records = await req.model.findone(id,EmployeeRoleModel)
         res.status(200).json(records);
 
-      } else {
+      } 
+      // else if(req.model.modelName == "customer"){
+      //   const records = await req.model.findone(id,CustomerModel)
+      //   res.status(200).json(records);
+
+      // }
+      else {
         let id = req.params.id;
         let theRecord = await req.model.get(id);
         res.status(200).json(theRecord);
       }
+      
+
     } catch (err) {
       next(err);
     }
