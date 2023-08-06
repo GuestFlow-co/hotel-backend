@@ -8,8 +8,8 @@ const {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeModel,
+  bookings,
 } = require("../models/index");
-const CustomerModel = require("../models/index");
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
@@ -64,6 +64,19 @@ async function handleGetOne(req, res, next) {
       res.status(200).json(records);
     } else if (req.model.modelName == "employee") {
       const records = await req.model.findone(id, EmployeeRoleModel);
+      res.status(200).json(records);
+    } else if (req.model.modelName == "payments") {
+
+      const record = await bookings.readOne(
+        id,
+        model.RoomModel,
+        model.PaymentModel,
+        model.ServiceModel,
+        model.CustomerModel
+      );
+      const records = await req.model.get(id)
+      let bookingmoney=record.total_amount +records.amount+record.services.reduce((acc, service) => acc + service.cost, 0);
+      records.amount =bookingmoney
       res.status(200).json(records);
     }
 

@@ -126,7 +126,8 @@ module.exports = {
   ServiceModel,
   BookedServiceModel,
   RoomFeatureModel,
-  EmployeeRoleModel
+  EmployeeRoleModel,
+  
   // Amenities,
   // HotelAmenities,
 };
