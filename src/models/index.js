@@ -26,6 +26,7 @@ const DATABASE_URL = process.env.DATABASE_URL || "sqlite:memory:";
 const sequelize = new Sequelize(DATABASE_URL);
 
 const users = usersModel(sequelize, DataTypes);
+const ResetToken = require("./RestToken/RestToken")(sequelize, DataTypes);
 const RoomModel = require("./rooms/rooms")(sequelize, DataTypes);
 const BookingModel = require("./Bookings")(sequelize, DataTypes);
 const PaymentModel = require("./Payment")(sequelize, DataTypes);
@@ -46,6 +47,7 @@ const CustomerModel = require('./users')(sequelize, DataTypes);
 // Define relationships
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
+ResetToken.belongsTo(users, { foreignKey: 'userID' });
 
 CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
@@ -102,6 +104,7 @@ RoomAllocationModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
 module.exports = {
   db: sequelize,
   users: new DataCollection(users),
+  ResetToken : new DataCollection(ResetToken),
   rooms: new DataCollection(RoomModel),
   bookings: new DataCollection(BookingModel),
   payments: new DataCollection(PaymentModel),
