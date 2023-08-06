@@ -22,9 +22,11 @@ authRouter.post('/signup', async (req, res, next) => {
 });
 
 authRouter.post('/signin', basicAuth, (req, res, next) => {
-  console.log(req.user)
- res.status(200).json(req.user);
-
+  const user = {
+    user: req.user,
+    token: req.user.token
+  };
+  res.status(200).json(user);
 });
 
 authRouter.get('/users', bearerAuth, permissions('delete'), async (req, res, next) => {
