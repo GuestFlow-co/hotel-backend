@@ -73,4 +73,8 @@ router.post('/resetPassword/:token', resetTokenValidator, async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }})
 
+  router.get('/rest/:token', resetTokenValidator, async (req, res, next) => {
+    console.log("Token received in route: ", req.params.token); // Add this line
+    // Rest of the route code
+  });
 module.exports = router;
