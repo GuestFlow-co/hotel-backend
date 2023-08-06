@@ -52,9 +52,11 @@ router.post('/forgotPassword', async (req, res) => {
 router.post('/resetPassword/:token', resetTokenValidator, async (req, res) => {
   const { newPassword } = req.body;
   const { resetToken } = req;
+  // console.log(resetToken)
+  console.log("modelllllllll",users.model)
 
   try {
-    const user = await users.model.findByPk(resetToken.user_id);
+    const user = await users.model.findByPk(1);
 
     if (user) {
       // Update user's password
