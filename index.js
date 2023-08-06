@@ -6,7 +6,7 @@ const { start } = require("./src/server");
 const PORT = process.env.PORT || 5000;
 
 // {force: true}
-db.sync({force: true})
+db.sync()
   .then(() => {
     start(PORT);
   })
