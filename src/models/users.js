@@ -53,14 +53,27 @@ const userModel = (sequelize, DataTypes) => {
     user.password = hashedPass;
   });
 
+  // model.authenticateBasic = async function (username, password) {
+  //   const user = await this.findOne({ where: { username } });
+  //   const valid = await bcrypt.compare(password, user.password);
+  //   if (valid) {
+  //     return user;
+  //   }
+  //   throw new Error("Invalid User");
+  // };
   model.authenticateBasic = async function (username, password) {
-    const user = await this.findOne({ where: { username } });
-    const valid = await bcrypt.compare(password, user.password);
-    if (valid) {
-      return user;
-    }
-    throw new Error("Invalid User");
-  };
+  const user = await this.findOne({ where: { username } });
+  if (!user) {
+    throw new Error("Invalid Login");
+  }
+
+  const valid = await bcrypt.compare(password, user.password);
+  if (valid) {
+    return user;
+  }
+  throw new Error("Invalid Login");
+};
+
 
   model.authenticateToken = async function (token) {
     try {
