@@ -1,8 +1,8 @@
 "use strict";
 
 const Bookings = (sequelize, DataTypes) =>
-  sequelize.define("bookings", {
-    bookings_id: {
+  sequelize.define("booking", {
+    booking_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

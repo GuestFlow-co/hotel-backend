@@ -1,6 +1,6 @@
 
-const Payments = (sequelize,DataTypes)=>sequelize.define('payments', {
-  payments_id: {
+const Payments = (sequelize,DataTypes)=>sequelize.define('payment', {
+  payment_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

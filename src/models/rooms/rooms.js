@@ -1,7 +1,7 @@
 'use srtict'
 
-const Rooms = (sequelize, DataTypes) => sequelize.define('Rooms', {
-    Rooms_id:{
+const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
+    Room_id:{
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
