@@ -7,14 +7,20 @@ const Payments = (sequelize,DataTypes)=>sequelize.define('payment', {
     allowNull: false,
   },
  
-  payment_date: {
+   payment_date: {
     type: DataTypes.DATE,
-    allowNull: false,
+    defaultValue: DataTypes.NOW ,
+    allowNull: true
   },
   amount: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
+  status:{
+    type: DataTypes.STRING,
+    defaultValue: 'pending',
+    allowNull: true,
+  }
 });
 
 module.exports = Payments;

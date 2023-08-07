@@ -7,6 +7,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         primaryKey: true,
         unique: true,
         autoIncrement: true,
+        field: 'room_id'
 
     },
     room_number: {
@@ -19,7 +20,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         allowNull: false,
     },
     rate: { type: DataTypes.INTEGER, },
-    status:{type:DataTypes.STRING}
+    roomStatus:{type:DataTypes.STRING}
 
 })
 module.exports=Rooms
