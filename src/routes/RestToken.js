@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require('express');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const transporter = require('../nodeMailer');
 const { ResetToken } = require('../models');
 const { users } = require('../models'); // Ensure correct path
 const resetTokenValidator = require('../middlewares/rest');
@@ -10,13 +11,13 @@ const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASS,
+//   },
+// });
 router.post('/forgotPassword', async (req, res) => {
   try {
     const { email } = req.body;

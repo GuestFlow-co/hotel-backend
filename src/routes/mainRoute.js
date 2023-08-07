@@ -1,14 +1,15 @@
 "use strict";
 const nodemailer = require("nodemailer");
+const transporter = require("../nodeMailer");
 require('dotenv').config();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASS,
+//   },
+// });
 const express = require("express");
 const model = require("../models/index");
 const { DataTypes } = require("sequelize");
