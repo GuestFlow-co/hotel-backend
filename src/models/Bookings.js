@@ -37,7 +37,7 @@ const Bookings = (sequelize, DataTypes) =>
       type: DataTypes.DATE,
       allowNull: true,
     },
-    total_amount: {
+    bookingPrice: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
