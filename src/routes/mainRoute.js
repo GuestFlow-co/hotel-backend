@@ -1,14 +1,15 @@
 "use strict";
 const nodemailer = require("nodemailer");
+const transporter = require("../nodeMailer");
 require('dotenv').config();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASS,
+//   },
+// });
 const express = require("express");
 const model = require("../models/index");
 const { DataTypes } = require("sequelize");
@@ -109,7 +110,7 @@ async function handleCreate(req, res, next) {
      let updatedbooking = await model.rooms.update(roomid, {
       roomStatus: "booked",
     });
-    
+     
     const mailOptions = {
       text: `Hello ${userInfo.username},\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!`,
       from: process.env.EMAIL,
