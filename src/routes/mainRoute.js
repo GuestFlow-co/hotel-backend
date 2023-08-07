@@ -101,6 +101,7 @@ async function handleCreate(req, res, next) {
 
 async function handleUpdate(req, res, next) {
   try {
+    
     let updatedRecord = await req.model.update(req.params.id, req.body);
     res.status(200).json(updatedRecord);
   } catch (err) {

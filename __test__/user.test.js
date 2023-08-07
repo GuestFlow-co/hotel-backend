@@ -99,9 +99,9 @@ test("creates a new user", async () => {
     expect(user.capabilities).toEqual(["read", "create", "update", "delete"]);
   });
 
-  test("should hash the password before creating a user", async () => {
+  test("should hash the password ", async () => {
     
-    const user = User.build({
+    const user1 =({
       username: "testuser",
       password: "testpassword",
       firstName: "farah",
@@ -110,15 +110,13 @@ test("creates a new user", async () => {
       email: "farah@gmail.com",
     });
   
-    // The number of salt rounds to use for hashing
-    const saltRounds = 10;
-   user.password = await bcrypt.hash(user.password, saltRounds);
-    await user.save();
+    const userData = await User.create(user1);
     const dbUser = await User.findOne({ where: { username: "testuser" } });
-  
+
+    expect(userData.lastName).toBe("yasin");
     expect(dbUser.password).not.toBe("testpassword");
     const isValidPassword = await bcrypt.compare("testpassword", dbUser.password);
-    // expect(isValidPassword).toBe(true);
+    expect(isValidPassword).toBe(true);
   });
   
   
