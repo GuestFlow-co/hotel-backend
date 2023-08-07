@@ -110,7 +110,7 @@ async function handleCreate(req, res, next) {
      let updatedbooking = await model.rooms.update(roomid, {
       roomStatus: "booked",
     });
-    
+     
     const mailOptions = {
       text: `Hello ${userInfo.username},\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!`,
       from: process.env.EMAIL,
