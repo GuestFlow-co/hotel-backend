@@ -69,23 +69,38 @@ authRouter.get("/verify", async (req, res, next) => {
   }
 });
 
-authRouter.post("/signin", basicAuth, (req, res, next) => {
-  const user = {
-    user: {
-      user_id: req.user.user_id,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      email: req.user.email,
-      phoneNumber: req.user.phoneNumber,
-      username: req.user.username,
-      role: req.user.role,
-      updatedAt: req.user.updatedAt,
-      createdAt: req.user.createdAt,
-    },
-    token: req.user.token,
-  };
-  res.status(200).json(user);
+authRouter.post("/signin", basicAuth, async (req, res, next) => {
+  try {
+    const user = req.user; // User object from basicAuth middleware
+
+    // Check if the user's email is verified
+    if (!user.emailVerified) {
+      return res.status(401).json({ message: "Email not verified yet." });
+    }
+
+    // Construct the user response object
+    else{
+    const userData = {
+      user: {
+        user_id: user.user_id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        username: user.username,
+        role: user.role,
+        updatedAt: user.updatedAt,
+        createdAt: user.createdAt,
+      },
+      token: user.token,
+    };
+
+    res.status(200).json(userData);
+  }} catch (e) {
+    next(e.message);
+  }
 });
+
 
 authRouter.get('/users', bearerAuth, permissions('read'), async (req, res, next) => {
   try {

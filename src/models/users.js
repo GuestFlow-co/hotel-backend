@@ -29,6 +29,10 @@ const userModel = (sequelize, DataTypes) => {
       type:DataTypes.STRING, // Adjust the data type based on your requirements
       allowNull: true,
     },
+    emailVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
