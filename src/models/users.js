@@ -25,6 +25,10 @@ const userModel = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "user",
     },
+    verificationToken: {
+      type:DataTypes.STRING, // Adjust the data type based on your requirements
+      allowNull: true,
+    },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
