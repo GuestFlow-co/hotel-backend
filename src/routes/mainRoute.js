@@ -1,16 +1,16 @@
 "use strict";
 const nodemailer = require("nodemailer");
-const { Op } = require("sequelize");
 
+const transporter = require("../nodeMailer");
 require("dotenv").config();
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASS,
-  },
-});
+const { Op } = require("sequelize");
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASS,
+//   },
+// });
 const express = require("express");
 const model = require("../models/index");
 const { DataTypes } = require("sequelize");
@@ -20,7 +20,8 @@ const {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeModel,
-  bookings,
+  RoomModel,
+  EmployeeRoleAssignmentModel,
 } = require("../models/index");
 const router = express.Router();
 
@@ -87,7 +88,7 @@ async function handleGetAll(req, res, next) {
       const records = await req.model.findAll(RoomFeatureModel);
       res.status(200).json(records);
     } else if (req.model.modelName == "employee") {
-      const records = await req.model.findAll(EmployeeRoleModel);
+      const records = await req.model.readTow(EmployeeRoleModel, RoomModel);
       res.status(200).json(records);
     } else {
       let allRecords = await req.model.get();
@@ -220,6 +221,5 @@ async function handleDelete(req, res, next) {
     next(err);
   }
 }
-
 
 module.exports = router;
