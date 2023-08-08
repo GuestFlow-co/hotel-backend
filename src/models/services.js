@@ -13,7 +13,7 @@ const Services = (sequelize, DataTypes) =>
       allowNull: false,
     },
     description: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     cost: {
       type: DataTypes.INTEGER,
