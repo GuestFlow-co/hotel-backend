@@ -6,6 +6,8 @@ const transporter = require("../nodeMailer");
 require('dotenv').config();
 const crypto = require('crypto');
 
+const model = require("../models/index");
+
 const { users } = require("../models");
 const basicAuth = require("../auth/basic.js");
 const bearerAuth = require("../auth/bearer.js");
@@ -46,7 +48,17 @@ authRouter.post("/signup", async (req, res, next) => {
     next(e.message);
   }
 });
+authRouter.get("/dirtyrooms", handeldirty);
 
+async function handeldirty(req, res, next) {
+
+  try{
+    const records = await model.rooms.dirty();
+    res.status(200).json(records);
+  }catch (err) {
+    next(err);
+  }
+}
 authRouter.get("/verify", async (req, res, next) => {
   try {
     const token = req.query.token;
