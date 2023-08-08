@@ -1,8 +1,9 @@
 "use strict";
 const nodemailer = require("nodemailer");
+
 const transporter = require("../nodeMailer");
 require("dotenv").config();
-
+const { Op } = require("sequelize");
 // const transporter = nodemailer.createTransport({
 //   service: 'gmail',
 //   auth: {
@@ -35,6 +36,46 @@ router.delete("/:model/:id", handleDelete);
 
 async function handleGetAll(req, res, next) {
   try {
+    if (req.model.modelName === "rooms") {
+      const { check_in_date, check_out_date } = req.query;
+
+      if (check_in_date && check_out_date) {
+        const bookedRooms = await model.bookings.findAlls({
+          where: {
+            check_in_date: { [Op.lte]: check_out_date },
+            check_out_date: { [Op.gte]: check_in_date },
+          },
+          attributes: ["theRoomID"],
+          raw: true,
+        });
+
+        const bookedRoomIds = bookedRooms.map((booking) => booking.theRoomID);
+        console.log(bookedRoomIds);
+
+        const allRooms = [];
+
+        for (let i = 0; i < bookedRoomIds.length; i++) {
+          let roombythisid = await req.model.get(bookedRoomIds[i]);
+          allRooms.push(roombythisid);
+        }
+
+        // const availableRooms = await req.model.findAlls({
+        //   where: {
+        //     Room_id: { [Op.notIn]: bookedRoomIds },
+        //   },
+        // });
+        // console.log(availableRooms);
+
+        res.status(200).json(allRooms);
+      } else {
+        const allRooms = await req.model.get();
+        res.status(200).json(allRooms);
+      }
+    } else {
+      const allRecords = await req.model.get();
+      res.status(200).json(allRecords);
+    }
+
     if (req.model.modelName == "bookings") {
       const record = await req.model.readAll(
         model.RoomModel,
@@ -57,6 +98,7 @@ async function handleGetAll(req, res, next) {
     next(err);
   }
 }
+
 
 async function handleGetOne(req, res, next) {
   try {
@@ -179,102 +221,5 @@ async function handleDelete(req, res, next) {
     next(err);
   }
 }
-
-// async function handleGetAll(req, res, next) {
-//   try {
-//     const modelName = req.params.model;
-//     const modelInstance = model[modelName];
-
-//     if (!modelInstance) {
-//       return res.status(404).json({ error: "Model not found." });
-//     }
-
-//     const checkInDate = req.query.check_in_date;
-//     const checkOutDate = req.query.check_out_date;
-
-//     if (checkInDate && checkOutDate) {
-//       if (!hasAttributes(modelInstance, ["check_in_date", "check_out_date"])) {
-//         const filteredBookings = await modelInstance.readAll(
-//           model.RoomModel,
-//           model.PaymentModel,
-//           model.ServiceModel,
-//           model.CustomerModel
-//         );
-
-//         res.status(200).json(filteredBookings);
-//       } else {
-//         const bookedRooms = await modelInstance.findAll({
-//           where: {
-//             check_in_date: { [Op.lte]: checkOutDate },
-//             check_out_date: { [Op.gte]: checkInDate },
-//           },
-//           attributes: ["room_id"],
-//           raw: true,
-//         });
-//         const allRooms = await model.RoomModel.findAll();
-//         const availableRooms = allRooms.filter(
-//           (room) =>
-//             !bookedRooms.some((bookedRoom) => bookedRoom.room_id === room.id)
-//         );
-
-//         res.status(200).json(availableRooms);
-//       }
-//     } else {
-//       let allRecords = await modelInstance.get();
-//       res.status(200).json(allRecords || []);
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-// async function handleGetOne(req, res, next) {
-//   try {
-//     const id = req.params.id;
-//     const modelName = req.params.model;
-//     const modelInstance = model[modelName];
-
-//     if (!modelInstance) {
-//       return res.status(404).json({ error: "Model not found." });
-//     }
-
-//     if (modelName === "bookings") {
-//       if (!hasAttributes(modelInstance, ["check_in_date", "check_out_date"])) {
-//         return res
-//           .status(400)
-//           .json({
-//             error:
-//               "Invalid request. Model must have 'check_in_date' and 'check_out_date' attributes.",
-//           });
-//       }
-
-//       const record = await modelInstance.readOne(
-//         id,
-//         model.RoomModel,
-//         model.PaymentModel,
-//         model.ServiceModel,
-//         model.CustomerModel
-//       );
-//       res.status(200).json(record);
-//     } else if (modelName === "rooms") {
-//       const records = await modelInstance.findone(id, RoomFeatureModel);
-//       res.status(200).json(records);
-//     } else if (modelName === "employee") {
-//       const records = await modelInstance.findone(id, EmployeeRoleModel);
-//       res.status(200).json(records);
-//     } else if (modelName === "payments") {
-
-//     } else {
-//       let theRecord = await modelInstance.get(id);
-//       res.status(200).json(theRecord);
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-
-// function hasAttributes(modelInstance, attributeNames) {
-//   const rawAttributes = modelInstance?.rawAttributes;
-//   return attributeNames.every((attr) => rawAttributes?.hasOwnProperty(attr));
-// }
 
 module.exports = router;
