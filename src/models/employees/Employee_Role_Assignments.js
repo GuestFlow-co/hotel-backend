@@ -1,21 +1,29 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  const EmployeeRoleAssignment = sequelize.define("EmployeeRoleAssignment", {
-    assignment_id: {
+  const employeeAssignment = sequelize.define("employeeAssignment", {
+    employeeAssignment_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       primaryKey: true,
       autoIncrement: true,
+
     },
-    employee_id: {
+    rooms_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    role_id: {
+    employee_id:{
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
+    assigentDate:{
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW ,
+      allowNull: true
+    }
+
   });
 
-  return EmployeeRoleAssignment;
+  return employeeAssignment;
 };

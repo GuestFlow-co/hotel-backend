@@ -43,7 +43,12 @@ class DataCollection {
     });
     return records;
   }
-
+dirty() {
+    
+      return this.model.findAll({
+        where: {roomStatus: "dirty" },
+      });
+     }
   async readAll(model, model1, model2, model3) {
     const records = await this.model.findAll({
       include: [
@@ -55,7 +60,16 @@ class DataCollection {
     });
     return records;
   }
-
+  async readTow(model, model1 ) {
+    const records = await this.model.findAll({
+      include: [
+        { model: model },
+        { model: model1 },
+       
+      ],
+    });
+    return records;
+  }
   async findAll(model) {
     const records = await this.model.findAll({
       include: [{ model: model }],
