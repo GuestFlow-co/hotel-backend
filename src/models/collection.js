@@ -69,6 +69,26 @@ class DataCollection {
     });
     return records;
   }
+
+  async readAllfortow(model, model1, model2, model3) {
+    const records = await this.model.findAll({
+      where:{check_In_Date:check_In_Date,check_Out_Date:check_Out_Date},
+      include: [
+        { model: model },
+        { model: model1 },
+        { model: model2 },
+        { model: model3 },
+      ],
+    });
+    return records;
+  }
+
+  async findAlls() {
+    const records = await this.model.findAll({
+    });
+    return records;
+  }
+
 }
 
 module.exports = DataCollection;
