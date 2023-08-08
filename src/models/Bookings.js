@@ -48,7 +48,19 @@ const Bookings = (sequelize, DataTypes) =>
     customer_id:{
       type: DataTypes.INTEGER,
       allowNull: true,
-    }
+    },
+    // guide_id:{
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    // }
+    guide_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      // references: {
+      //   model: 'guide', // Adjust the model name to match your definition
+      //   key: 'guide_id', // The primary key of the referenced table
+      // },
+    },
   });
 
 module.exports = Bookings;

@@ -41,12 +41,26 @@ const RoomAllocationModel = require("./rooms/roomAllocation")(sequelize, DataTyp
 const EmployeeRoleModel = require("./employees/EmployeesRoles")(sequelize, DataTypes);
 const EmployeeRoleAssignmentModel = require("./employees/Employee_Role_Assignments")(sequelize, DataTypes);
 const CustomerModel = require('./users')(sequelize, DataTypes);
+const TourModel = require('./tour/tour')(sequelize, DataTypes);
+const GuideModel = require('./guide/guide')(sequelize, DataTypes);
+
+
 // const AmenityModel = require("./Amenities")(sequelize, DataTypes);
 // const HotelAmenityModel = require("./Hotel_Amenities")(sequelize, DataTypes);
 
 // Define relationships
 // CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
 // BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
+
+GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
+BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
+
+GuideModel.belongsTo(TourModel, { foreignKey: "tour_id" });
+TourModel.hasMany(GuideModel, { foreignKey: "tour_id" });
+
+
+
+
 ResetToken.belongsTo(users, { foreignKey: 'userID' });
 
 CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
@@ -119,6 +133,10 @@ module.exports = {
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
   RoomsFratuer:new DataCollection(RoomsFratuer),
   customer: new DataCollection(CustomerModel),
+ guide:new DataCollection(GuideModel),
+ tour:new DataCollection(TourModel)
+ ,GuideModel,
+ TourModel,
   CustomerModel,
   RoomModel,
   PaymentModel,
