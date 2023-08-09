@@ -63,25 +63,15 @@ async function handleGetAll(req, res, next) {
           let roombythisid = await req.model.get(bookedRoomIds[i]);
           allRooms.push(roombythisid);
         }
-
-        // const availableRooms = await req.model.findAlls({
-        //   where: {
-        //     Room_id: { [Op.notIn]: bookedRoomIds },
-        //   },
-        // });
-        // console.log(availableRooms);
-
+        
         res.status(200).json(allRooms);
       } else {
         const allRooms = await req.model.get();
         res.status(200).json(allRooms);
       }
-    } else {
-      const allRecords = await req.model.get();
-      res.status(200).json(allRecords);
     }
 
-    if (req.model.modelName == "bookings") {
+    else if (req.model.modelName == "bookings") {
       const record = await req.model.readAll(
         model.RoomModel,
         model.PaymentModel,
