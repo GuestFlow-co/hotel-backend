@@ -44,8 +44,16 @@ class DataCollection {
     });
     return records;
   }
+  dirty() {
+    
+      return this.model.findAll({
+        where: {roomStatus: "dirty" },
+      });
+     }
+
 
   async readAll(model, model1, model2, model3,model4,model5) {
+
     const records = await this.model.findAll({
       include: [
         { model: model },
@@ -57,7 +65,16 @@ class DataCollection {
     });
     return records;
   }
-
+  async readTow(model, model1 ) {
+    const records = await this.model.findAll({
+      include: [
+        { model: model },
+        { model: model1 },
+       
+      ],
+    });
+    return records;
+  }
   async findAll(model) {
     const records = await this.model.findAll({
       include: [{ model: model }],
@@ -71,6 +88,26 @@ class DataCollection {
     });
     return records;
   }
+
+  async readAllfortow(model, model1, model2, model3) {
+    const records = await this.model.findAll({
+      where:{check_In_Date:check_In_Date,check_Out_Date:check_Out_Date},
+      include: [
+        { model: model },
+        { model: model1 },
+        { model: model2 },
+        { model: model3 },
+      ],
+    });
+    return records;
+  }
+
+  async findAlls() {
+    const records = await this.model.findAll({
+    });
+    return records;
+  }
+
 }
 
 module.exports = DataCollection;

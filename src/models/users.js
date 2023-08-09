@@ -26,7 +26,7 @@ const userModel = (sequelize, DataTypes) => {
       defaultValue: "user",
     },
     verificationToken: {
-      type:DataTypes.STRING, // Adjust the data type based on your requirements
+      type: DataTypes.STRING, // Adjust the data type based on your requirements
       allowNull: true,
     },
     emailVerified: {
@@ -70,18 +70,17 @@ const userModel = (sequelize, DataTypes) => {
   //   throw new Error("Invalid User");
   // };
   model.authenticateBasic = async function (username, password) {
-  const user = await this.findOne({ where: { username } });
-  if (!user) {
+    const user = await this.findOne({ where: { username } });
+    if (!user) {
+      throw new Error("Invalid Login");
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (valid) {
+      return user;
+    }
     throw new Error("Invalid Login");
-  }
-
-  const valid = await bcrypt.compare(password, user.password);
-  if (valid) {
-    return user;
-  }
-  throw new Error("Invalid Login");
-};
-
+  };
 
   model.authenticateToken = async function (token) {
     try {
