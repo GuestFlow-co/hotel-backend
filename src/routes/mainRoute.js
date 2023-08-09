@@ -20,8 +20,13 @@ const {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeModel,
+
+  bookings,
+  TourModel,
+  GuideModel
   RoomModel,
   EmployeeRoleAssignmentModel,
+  
 } = require("../models/index");
 const router = express.Router();
 
@@ -81,7 +86,9 @@ async function handleGetAll(req, res, next) {
         model.RoomModel,
         model.PaymentModel,
         model.ServiceModel,
-        model.CustomerModel
+        model.CustomerModel,
+        model.GuideModel,
+        model.TourModel
       );
       res.status(200).json(record);
     } else if (req.model.modelName == "rooms") {
@@ -90,7 +97,16 @@ async function handleGetAll(req, res, next) {
     } else if (req.model.modelName == "employee") {
       const records = await req.model.readTow(EmployeeRoleModel, RoomModel);
       res.status(200).json(records);
-    } else {
+
+    }
+    else if (req.model.modelName == "guide") {
+      const records = await req.model.findAll(TourModel);
+      res.status(200).json(records);
+    }else if (req.model.modelName == "tour") {
+      const records = await req.model.findAll(GuideModel);
+      res.status(200).json(records);
+    }
+  else {
       let allRecords = await req.model.get();
       res.status(200).json(allRecords);
     }
