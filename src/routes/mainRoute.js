@@ -23,7 +23,7 @@ const {
 
   bookings,
   TourModel,
-  GuideModel
+  GuideModel,
   RoomModel,
   EmployeeRoleAssignmentModel,
   

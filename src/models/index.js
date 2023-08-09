@@ -45,21 +45,10 @@ const TourModel = require('./tour/tour')(sequelize, DataTypes);
 const GuideModel = require('./guide/guide')(sequelize, DataTypes);
 
 
-const RoomTypeFeatureModel = require("./rooms/room_type_features")(
-  sequelize,
-  DataTypes
-);
-const RoomAllocationModel = require("./rooms/roomAllocation")(
-  sequelize,
-  DataTypes
-);
-const EmployeeRoleModel = require("./employees/EmployeesRoles")(
-  sequelize,
-  DataTypes
-);
-const EmployeeRoleAssignmentModel =
-  require("./employees/Employee_Role_Assignments")(sequelize, DataTypes);
-const CustomerModel = require("./users")(sequelize, DataTypes);
+
+
+
+
 
 // const AmenityModel = require("./Amenities")(sequelize, DataTypes);
 // const HotelAmenityModel = require("./Hotel_Amenities")(sequelize, DataTypes);
