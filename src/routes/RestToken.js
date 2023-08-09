@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const transporter = require('../nodeMailer');
 const { ResetToken } = require('../models');
-const { users } = require('../models'); // Ensure correct path
+const { users } = require('../models'); 
 const resetTokenValidator = require('../middlewares/rest');
 const bcrypt = require("bcrypt");
 
@@ -57,10 +57,8 @@ router.post('/resetPassword/:token', resetTokenValidator, async (req, res) => {
   const { resetToken } = req;
   const { email } = req.body;
 
-  // Find the user by their email using the DataCollection object
   const theuser = await users.model.findOne({ where: { email: email } });
   
-  // console.log(resetToken)
   console.log("modelllllllll",users.model)
 
   try {
@@ -85,7 +83,6 @@ router.post('/resetPassword/:token', resetTokenValidator, async (req, res) => {
   }})
 
   router.get('/rest/:token', resetTokenValidator, async (req, res, next) => {
-    console.log("Token received in route: ", req.params.token); // Add this line
-    // Rest of the route code
+    console.log("Token received in route: ", req.params.token); 
   });
 module.exports = router;
