@@ -79,8 +79,9 @@ const MockModel = {
         const mockModel1 = { name: "MockModel1" };
         const mockModel2 = { name: "MockModel2" };
         const mockModel3 = { name: "MockModel3" };
-  
-        await dataCollection.readOne(id, mockModel, mockModel1, mockModel2, mockModel3);
+        const mockModel4 = { name: "MockModel4" };
+
+        await dataCollection.readOne(id, mockModel, mockModel1, mockModel2, mockModel3,mockModel4);
   
         expect(MockModel.findOne).toHaveBeenCalledWith({
           where: { [`${MockModel.name.toLowerCase()}_id`]: id },
@@ -89,6 +90,8 @@ const MockModel = {
             { model: mockModel1 },
             { model: mockModel2 },
             { model: mockModel3 },
+            { model: mockModel4 },
+
           ],
         });
       });
@@ -100,8 +103,10 @@ const MockModel = {
         const mockModel1 = { name: "MockModel1" };
         const mockModel2 = { name: "MockModel2" };
         const mockModel3 = { name: "MockModel3" };
-  
-        await dataCollection.readAll(mockModel, mockModel1, mockModel2, mockModel3);
+        const mockModel4 = { name: "MockModel4" };
+        const mockModel5 = { name: "MockModel5" };
+
+        await dataCollection.readAll(mockModel, mockModel1, mockModel2,mockModel3,mockModel4,mockModel5);
   
         expect(MockModel.findAll).toHaveBeenCalledWith({
           include: [
@@ -109,6 +114,7 @@ const MockModel = {
             { model: mockModel1 },
             { model: mockModel2 },
             { model: mockModel3 },
+            { model: mockModel4 ,include:[{model: mockModel5}]},
           ],
         });
       });
