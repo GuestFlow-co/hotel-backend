@@ -25,7 +25,12 @@ const tour = (sequelize, DataTypes) =>
       tour_price: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
+      
+      tourId:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    }
     //   ,
     // guid_id:{
     //   type: DataTypes.INTEGER,

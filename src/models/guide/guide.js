@@ -15,12 +15,14 @@ const guide = (sequelize, DataTypes) =>
     avalibility:{
         type:DataTypes.BOOLEAN,
         defaultValue: true
-     },
-      tourId:{
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    }
+     }
   });
+  
+    // guide.associate = (models) => {
+    //   guide.belongsToMany(models.EmployeeRole, {
+    //     through: models.EmployeeRoleAssignment,
+    //     foreignKey: "employee_id",
+    //   });}
 
 
 module.exports =  guide ;
