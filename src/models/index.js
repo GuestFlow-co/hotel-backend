@@ -55,8 +55,14 @@ const GuideModel = require('./guide/guide')(sequelize, DataTypes);
 GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
 BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
 
-GuideModel.belongsTo(TourModel, { foreignKey: "tour_id" });
-TourModel.hasMany(GuideModel, { foreignKey: "tour_id" });
+GuideModel.hasMany(TourModel, { foreignKey: "tourId" });
+TourModel.belongsTo(GuideModel, { foreignKey: "tourId" });
+
+// GuideModel.belongsTo(TourModel, { foreignKey: "guide_id" });
+// TourModel.hasMany(GuideModel, { foreignKey: "guide_id" });
+
+// GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
+// BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
 
 
 

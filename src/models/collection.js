@@ -31,7 +31,7 @@ class DataCollection {
       where: { [`${this.model.name.toLowerCase()}_id`]: id },
     });
   }
-  async readOne(id, model, model1, model2, model3) {
+  async readOne(id, model, model1, model2, model3, model4) {
     const records = await this.model.findOne({
       where: { [`${this.model.name.toLowerCase()}_id`]: id },
       include: [
@@ -39,18 +39,20 @@ class DataCollection {
         { model: model1 },
         { model: model2 },
         { model: model3 },
+        { model: model4 },
       ],
     });
     return records;
   }
 
-  async readAll(model, model1, model2, model3) {
+  async readAll(model, model1, model2, model3,model4,model5) {
     const records = await this.model.findAll({
       include: [
         { model: model },
         { model: model1 },
         { model: model2 },
         { model: model3 },
+        { model: model4 ,include:[{model:model5}] },
       ],
     });
     return records;

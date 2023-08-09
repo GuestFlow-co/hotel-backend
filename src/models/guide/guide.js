@@ -15,11 +15,11 @@ const guide = (sequelize, DataTypes) =>
     avalibility:{
         type:DataTypes.BOOLEAN,
         defaultValue: true
-    },
-    booking_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
+     },
+      tourId:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    }
   });
 
 
