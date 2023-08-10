@@ -19,8 +19,24 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    rate: { type: DataTypes.INTEGER, },
-    roomStatus:{type:DataTypes.STRING}
+    rate: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER), 
+        defaultValue: [],
+      },
+      userRate:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      theRoomRate:{
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      roomPrice:{
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+    roomStatus:{type:DataTypes.STRING,
+        defaultValue:"Available"}
 
 })
 module.exports=Rooms
