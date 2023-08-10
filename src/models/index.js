@@ -144,7 +144,7 @@ module.exports = {
   services: new DataCollection(ServiceModel),
   bookedServices: new DataCollection(BookedServiceModel),
   roomTypes: new DataCollection(RoomTypeModel),
-  roomFeatures: new DataCollection(RoomFeatureModel),
+  features: new DataCollection(RoomFeatureModel),
   roomTypeFeatures: new DataCollection(RoomTypeFeatureModel),
   roomAllocations: new DataCollection(RoomAllocationModel),
   employeeRoles: new DataCollection(EmployeeRoleModel),
