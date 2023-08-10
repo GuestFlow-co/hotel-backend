@@ -43,13 +43,18 @@ async function handleGetAll(req, res, next) {
   try {
     if (req.model.modelName === "rooms") {
       const { check_in_date, check_out_date } = req.query;
+      if (!check_in_date && !check_out_date){
+        const records = await req.model.findAll(RoomFeatureModel);
 
+        res.status(200).json(records);
+      }
       if (check_in_date && check_out_date) {
         const bookedRooms = await model.bookings.findAlls({
           where: {
-            check_in_date: { [Op.lte]: check_out_date },
-            check_out_date: { [Op.gte]: check_in_date },
-          },
+            [Op.or]: [
+           { check_in_date: { [Op.gt]: check_out_date },
+            check_out_date: { [Op.lt]: check_in_date }}
+          ]},
           attributes: ["theRoomID"],
           raw: true,
         });
@@ -57,18 +62,22 @@ async function handleGetAll(req, res, next) {
         const bookedRoomIds = bookedRooms.map((booking) => booking.theRoomID);
         console.log(bookedRoomIds);
 
+        const records = await req.model.findAll(RoomFeatureModel);
+        const allRoomsID = records.map((booking) => booking.Room_id);
+        console.log(allRoomsID);
+        const unbookedRoomIds = allRoomsID.filter(roomId => !bookedRoomIds.includes(roomId));
+    
+    console.log(unbookedRoomIds[0]);
+
         const allRooms = [];
 
-        for (let i = 0; i < bookedRoomIds.length; i++) {
-          let roombythisid = await req.model.get(bookedRoomIds[i]);
+        for (let i = 0; i < unbookedRoomIds.length; i++) {
+          let roombythisid = await req.model.findone(unbookedRoomIds[i],RoomFeatureModel);
           allRooms.push(roombythisid);
         }
         
         res.status(200).json(allRooms);
-      } else {
-        const allRooms = await req.model.get();
-        res.status(200).json(allRooms);
-      }
+      } 
     }
 
     else if (req.model.modelName == "bookings") {
