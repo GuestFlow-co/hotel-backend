@@ -64,6 +64,10 @@ BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
 GuideModel.hasMany(TourModel, { foreignKey: "tourId" });
 TourModel.belongsTo(GuideModel, { foreignKey: "tourId" });
 
+
+TourModel.hasMany(BookingModel, { foreignKey: "tourId" });
+BookingModel.belongsTo(TourModel, { foreignKey: "tourId" });
+
 // GuideModel.belongsTo(TourModel, { foreignKey: "guide_id" });
 // TourModel.hasMany(GuideModel, { foreignKey: "guide_id" });
 
