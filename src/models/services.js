@@ -1,4 +1,4 @@
-  "use strict";
+"use strict";
 const Services = (sequelize, DataTypes) =>
   sequelize.define("service", {
     service_id: {
@@ -7,7 +7,7 @@ const Services = (sequelize, DataTypes) =>
       primaryKey: true,
       autoIncrement: true,
     },
-  
+
     serviceName: {
       type: DataTypes.STRING,
       allowNull: false,

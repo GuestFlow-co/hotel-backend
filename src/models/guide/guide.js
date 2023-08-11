@@ -26,7 +26,7 @@ const guide = (sequelize, DataTypes) =>
     // guide.associate = (models) => {
     //   guide.belongsToMany(models.EmployeeRole, {
     //     through: models.EmployeeRoleAssignment,
-    //     foreignKey: "employee_id",
+    //     foreignKey: "employee_id",F
     //   });}
 
 
