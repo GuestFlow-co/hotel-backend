@@ -3,8 +3,8 @@
 const express = require("express");
 const authRouter = express.Router();
 const transporter = require("../nodeMailer");
-require('dotenv').config();
-const crypto = require('crypto');
+require("dotenv").config();
+const crypto = require("crypto");
 
 const model = require("../models/index");
 
@@ -18,10 +18,12 @@ authRouter.post("/signup", async (req, res, next) => {
     const userRecord = await users.create(req.body);
 
     // Generate a verification token
-    const token = crypto.randomBytes(20).toString('hex'); // Generate a random string
-    const verificationToken = crypto.createHash('sha256').update(token).digest('hex'); // Hash the token using SHA-256
+    const token = crypto.randomBytes(20).toString("hex"); // GenFerate a random string
+    const verificationToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex"); // Hash the token using SHA-256
     const expirationDate = new Date(Date.now() + 3600000); // Set the expiration date (1 hour from now)
-    
 
     // Update user record with the verification token
     userRecord.verificationToken = verificationToken;
@@ -51,11 +53,10 @@ authRouter.post("/signup", async (req, res, next) => {
 authRouter.get("/dirtyrooms", handeldirty);
 
 async function handeldirty(req, res, next) {
-
-  try{
+  try {
     const records = await model.rooms.dirty();
     res.status(200).json(records);
-  }catch (err) {
+  } catch (err) {
     next(err);
   }
 }
@@ -64,7 +65,9 @@ authRouter.get("/verify", async (req, res, next) => {
     const token = req.query.token;
 
     // Find the user by the verification token
-    const userRecord = await users.model.findOne({ where: { verificationToken: token } });
+    const userRecord = await users.model.findOne({
+      where: { verificationToken: token },
+    });
 
     if (!userRecord) {
       return res.status(404).send("Invalid token");
@@ -91,38 +94,43 @@ authRouter.post("/signin", basicAuth, async (req, res, next) => {
     }
 
     // Construct the user response object
-    else{
-    const userData = {
-      user: {
-        user_id: user.user_id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        username: user.username,
-        role: user.role,
-        updatedAt: user.updatedAt,
-        createdAt: user.createdAt,
-      },
-      token: user.token,
-    };
+    else {
+      const userData = {
+        user: {
+          user_id: user.user_id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          username: user.username,
+          role: user.role,
+          updatedAt: user.updatedAt,
+          createdAt: user.createdAt,
+        },
+        token: user.token,
+      };
 
-    res.status(200).json(userData);
-  }} catch (e) {
-    next(e.message);
-  }
-});
-
-
-authRouter.get('/users', bearerAuth, permissions('read'), async (req, res, next) => {
-  try {
-    const userRecords = await users.findAll();
-    const userList = userRecords.map(user => user.username);
-    res.status(200).json(userList);
+      res.status(200).json(userData);
+    }
   } catch (e) {
     next(e.message);
   }
 });
+
+authRouter.get(
+  "/users",
+  bearerAuth,
+  permissions("read"),
+  async (req, res, next) => {
+    try {
+      const userRecords = await users.findAll();
+      const userList = userRecords.map((user) => user.username);
+      res.status(200).json(userList);
+    } catch (e) {
+      next(e.message);
+    }
+  }
+);
 
 authRouter.get("/secret", bearerAuth, async (req, res, next) => {
   res.status(200).send("Welcome to the secret area");

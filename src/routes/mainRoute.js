@@ -155,11 +155,11 @@ async function handleCreate(req, res, next) {
       let difference = date_1.getTime() - date_2.getTime();
       let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
 
-      const roomID=req.body.theRoomID
+      const roomID = req.body.theRoomID;
       const theRoom = await model.rooms.get(roomID);
-      const totalprice = theRoom.roomPrice * TotalDays 
-      req.body.bookingCost =totalprice
-      console.log(totalprice,"00000000000000");
+      const totalprice = theRoom.roomPrice * TotalDays;
+      req.body.bookingCost = totalprice;
+      console.log(totalprice, "00000000000000");
       const paymentObj = await model.PaymentModel.create({
         amount: totalprice,
       });
@@ -169,10 +169,8 @@ async function handleCreate(req, res, next) {
       const roomid = newRecord.theRoomID;
       let updatedbooking = await model.rooms.update(roomid, {
         roomStatus: "booked",
-
       });
 
-   
       const mailOptions = {
         text: `Hello ${userInfo.username},\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`, // Consolidated text here
         from: process.env.EMAIL,
@@ -204,76 +202,14 @@ async function handleCreate(req, res, next) {
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
-    } 
-    
-    //  else if (req.model.modelName === "tour") {
-    //   let newRecord = await req.model.create(req.params.id, req.body);
-    //   req.body.people_in_tour = req.body.people_in_tour || [];
-    //   req.body.people_in_tour.push(req.body.number_of_booking_people);
-    //   const x = await req.model.create(req.params.id, req.body);
-    //   res.status(201).json(x)
-    //   res.status(201).json(newRecord);
-    // //   ;
-    //  }
-    //   let newRecord = await req.model.update(req.params.id, req.body);
-    
-    //   // Ensure people_in_tour is defined and initialized as an array
-    //   req.body.people_in_tour = req.body.people_in_tour || [];
-    //   req.body.people_in_tour.push(req.body.number_of_booking_people);
-    
-    //   const customers = newRecord.people_in_tour;
-    //   const totalCustomers = customers.length;
-    //   const sumCustomers = customers.reduce((sum, c) => sum + c, 0);
-    
-    //   // Calculate the sum of values inside people_in_tour array
-    //   const sumPeopleInTour = req.body.people_in_tour.reduce((sum, value) => sum + value, 0);
-    
-    //   const maxCustomer = req.body.max_amount;
-    //   const availableSeat = totalCustomers > 0 ? maxCustomer - sumCustomers : 1;
-    
-    //   // Update the number_of_booking_people field with the sum of people_in_tour
-    //   req.body.people_in_tour = availableSeat;
-    
-    //   const x = await req.model.create(req.params.id, req.body);
-    //   res.status(200).json(x)
-    //   res.status(201).json(newRecord);
-    //   ;
-    // }
-    
-      // let newRecord = await req.model.create(req.body);
-      // const userInfo = await model.users.get(newRecord.customer_id);
-
-      // const tourInfo = await model.tour.get(newRecord.tourId);
-      
-      // const tourId = newRecord.tourId;
-
-      // req.body.people_in_tour.push(req.body.number_of_booking_people);
-      //  const customers = updatedRecord.people_in_tour;
-      //   const totalCustomers = customers.length;
-      //   const sumCustomers = customers.reduce((sum, c) => sum + c, 0);
-      
-      //   const maxCustomer = req.body.max_amount;
-      //   const availableSeat = totalCustomers > 0 ? maxCustomer - sumCustomers : 1;
-      
-
-      // let updatedTour = await model.tour.update(tourId, {
-      //   people_in_tour: sumCustomers,
-      // });
-    
-    
-    
-    else {
+    } else {
       let newRecord = await req.model.create(req.body);
       res.status(201).json(newRecord);
     }
-
-
   } catch (err) {
     next(err);
   }
 }
-
-
 
 async function handleUpdate(req, res, next) {
   try {
@@ -291,40 +227,29 @@ async function handleUpdate(req, res, next) {
         roomStatus: "dirty",
       });
       res.status(200).json(updatedbooking);
-    } 
+    } else if (req.model.modelName === "rooms") {
+      // let theRecord = await req.model.get(req.params.id);
 
-
-   else if (req.model.modelName === "rooms"){
-    // let theRecord = await req.model.get(req.params.id);
-    
-    let updatedRecord = await req.model.update(req.params.id, req.body);
-    req.body.rate.push(req.body.userRate);
-    const ratings = updatedRecord.rate;
-  const totalRatings = ratings.length;
-  const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
-  const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 1;
-  req.body.theRoomRate=averageRating
-  console.log(req.body.theRoomRate);
-  const x=await req.model.update(req.params.id, req.body)
-    res.status(200).json(x);
-
-   }
-
-    else {
+      let updatedRecord = await req.model.update(req.params.id, req.body);
+      req.body.rate.push(req.body.userRate);
+      const ratings = updatedRecord.rate;
+      const totalRatings = ratings.length;
+      const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
+      const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 1;
+      req.body.theRoomRate = averageRating;
+      console.log(req.body.theRoomRate);
+      const x = await req.model.update(req.params.id, req.body);
+      res.status(200).json(x);
+    } else {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
     }
-
-
-    
   } catch (err) {
     next(err);
   }
 }
 
-
-
-router.post('/tour/:id/add-people', async (req, res, next) => {
+router.post("/tour/:id/add-people", async (req, res, next) => {
   try {
     const tourId = req.params.id;
     const { number_of_booking_people } = req.body;
@@ -332,33 +257,35 @@ router.post('/tour/:id/add-people', async (req, res, next) => {
     const existingTour = await TourModel.findByPk(tourId);
 
     if (!existingTour) {
-      return res.status(404).json({ message: 'Tour not found' });
+      return res.status(404).json({ message: "Tour not found" });
     }
 
-    const newPeopleInTour = [...existingTour.people_in_tour, number_of_booking_people];
-    const sumPeopleInTour = newPeopleInTour.reduce((sum, value) => sum + value, 0);
+    const newPeopleInTour = [
+      ...existingTour.people_in_tour,
+      number_of_booking_people,
+    ];
+    const sumPeopleInTour = newPeopleInTour.reduce(
+      (sum, value) => sum + value,
+      0
+    );
 
-    const availableSeat = sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
+    const availableSeat =
+      sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
 
     if (sumPeopleInTour <= existingTour.max_amount) {
-      await existingTour.update({ people_in_tour: newPeopleInTour, availableSeat: availableSeat });
+      await existingTour.update({
+        people_in_tour: newPeopleInTour,
+        availableSeat: availableSeat,
+      });
 
       res.status(200).json(existingTour);
     } else {
-      res.status(400).json({ message: 'Exceeded max capacity' });
+      res.status(400).json({ message: "Exceeded max capacity" });
     }
   } catch (err) {
     next(err);
   }
 });
-
-
-
-
-
-
-
-
 
 async function handleDelete(req, res, next) {
   try {

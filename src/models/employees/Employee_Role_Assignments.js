@@ -7,22 +7,20 @@ module.exports = (sequelize) => {
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-
     },
     rooms_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    employee_id:{
+    employee_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    assigentDate:{
+    assigentDate: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW ,
-      allowNull: true
-    }
-
+      defaultValue: DataTypes.NOW,
+      allowNull: true,
+    },
   });
 
   return employeeAssignment;

@@ -7,17 +7,15 @@ module.exports = (sequelize) => {
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-
     },
     rooms_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    feature_id:{
+    feature_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    }
-
+    },
   });
 
   return RoomsFratuer;
