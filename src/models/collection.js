@@ -60,7 +60,7 @@ class DataCollection {
         { model: model1 },
         { model: model2 },
         { model: model3 },
-        { model: model4 ,include:[{model:model5}] },
+        { model: model4 },{model:model5} 
       ],
     });
     return records;

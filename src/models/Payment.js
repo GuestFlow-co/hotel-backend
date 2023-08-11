@@ -6,7 +6,6 @@ const Payments = (sequelize,DataTypes)=>sequelize.define('payment', {
     autoIncrement: true,
     allowNull: false,
   },
- 
    payment_date: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW ,

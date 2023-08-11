@@ -40,7 +40,14 @@ const Booking = (sequelize, DataTypes) =>
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    
+    tourId:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  number_of_booking:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  }
   });
 
 module.exports = Booking;

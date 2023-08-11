@@ -15,7 +15,12 @@ const guide = (sequelize, DataTypes) =>
     avalibility:{
         type:DataTypes.BOOLEAN,
         defaultValue: true
-     }
+     },
+     guide_price: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+     
   });
   
     // guide.associate = (models) => {
