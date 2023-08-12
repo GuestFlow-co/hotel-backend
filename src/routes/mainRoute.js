@@ -159,12 +159,15 @@ async function handleCreate(req, res, next) {
       const theRoom = await model.rooms.get(roomID);
       const totalprice = theRoom.roomPrice * TotalDays;
       req.body.bookingCost = totalprice;
+      //////////
       console.log(totalprice, "00000000000000");
       const paymentObj = await model.PaymentModel.create({
         amount: totalprice,
       });
-
       req.body.paymentID = paymentObj.payment_id;
+      //////////////
+      let newRecord = await req.model.create(req.body);
+      const userInfo = await model.users.get(newRecord.customer_id);
 
       const roomid = newRecord.theRoomID;
       let updatedbooking = await model.rooms.update(roomid, {
@@ -172,7 +175,7 @@ async function handleCreate(req, res, next) {
       });
 
       const mailOptions = {
-        text: `Hello ${userInfo.username},\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`, // Consolidated text here
+        text: `Hello ,\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`, // Consolidated text here
         from: process.env.EMAIL,
         to: userInfo.email,
         subject: "Booking Confirmation",
