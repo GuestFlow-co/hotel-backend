@@ -47,6 +47,10 @@ const Booking = (sequelize, DataTypes) =>
   number_of_seats_inTour:{
     type: DataTypes.INTEGER,
     allowNull: true,
+  },
+  total_tour_price:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
   }
   });
 

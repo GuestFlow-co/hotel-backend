@@ -24,11 +24,7 @@ const tour = (sequelize, DataTypes) =>
       },
       Seat_price: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      total_tour_price: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       tourId:{
       type: DataTypes.INTEGER,
@@ -49,17 +45,13 @@ const tour = (sequelize, DataTypes) =>
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    number_of_booking_people:{
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     availableSeat:{
       type: DataTypes.INTEGER,
       allowNull: true,
     },
     tour_customer: {
       type: DataTypes.ARRAY(DataTypes.JSON), 
-      defaultValue: [],
+      // defaultValue: [],
     },
   });
 

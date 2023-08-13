@@ -32,7 +32,7 @@ const PaymentModel = require("./Payment")(sequelize, DataTypes);
 const EmployeeModel = require("./employees/Employees")(sequelize, DataTypes);
 const ServiceModel = require("./services")(sequelize, DataTypes);
 const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
-const RoomsFratuer = require("./RoomsFratuer")(sequelize, DataTypes);
+const RoomsFratuer = require("./RoomsFeatures")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
 
@@ -40,10 +40,7 @@ const RoomTypeFeatureModel = require("./rooms/room_type_features")(
   sequelize,
   DataTypes
 );
-const RoomAllocationModel = require("./rooms/roomAllocation")(
-  sequelize,
-  DataTypes
-);
+
 const EmployeeRoleModel = require("./employees/EmployeesRoles")(
   sequelize,
   DataTypes
@@ -105,14 +102,6 @@ EmployeeModel.belongsToMany(RoomModel, {
   foreignKey: "employee_id",
 });
 
-// EmployeeModel.belongsToMany(EmployeeRoleModel, {
-//   through: EmployeeRoleAssignmentModel,
-//   foreignKey: "employee_id",
-// });
-// EmployeeRoleModel.belongsToMany(EmployeeModel, {
-//   through: EmployeeRoleAssignmentModel,
-//   foreignKey: "role_id",
-// });
 
 EmployeeRoleModel.hasMany(EmployeeModel, { foreignKey: "roolsID" });
 EmployeeModel.belongsTo(EmployeeRoleModel, { foreignKey: "roolsID" });
@@ -125,18 +114,6 @@ RoomFeatureModel.belongsToMany(RoomModel, {
   through: RoomsFratuer,
   foreignKey: "feature_id",
 });
-
-BookingModel.hasOne(RoomAllocationModel, { foreignKey: "booking_id" });
-RoomAllocationModel.belongsTo(BookingModel, { foreignKey: "booking_id" });
-
-// RoomModel.belongsToMany(AmenityModel, {
-//   through: HotelAmenityModel,
-//   foreignKey: "room_number",
-// });
-// AmenityModel.belongsToMany(RoomModel, {
-//   through: HotelAmenityModel,
-//   foreignKey: "amenity_id",
-// });
 
 module.exports = {
   db: sequelize,
@@ -151,7 +128,6 @@ module.exports = {
   roomTypes: new DataCollection(RoomTypeModel),
   features: new DataCollection(RoomFeatureModel),
   roomTypeFeatures: new DataCollection(RoomTypeFeatureModel),
-  roomAllocations: new DataCollection(RoomAllocationModel),
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
   RoomsFratuer: new DataCollection(RoomsFratuer),
@@ -162,6 +138,7 @@ module.exports = {
   TourModel,
   CustomerModel,
   RoomModel,
+  BookingModel,
   PaymentModel,
   EmployeeModel,
   ServiceModel,
