@@ -295,11 +295,6 @@ console.log(existingPayment)
       }
     } 
 
-
-    
-
-
-
      else {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);

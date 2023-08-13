@@ -88,7 +88,7 @@ test("creates a new user", async () => {
     expect(token).toBeTruthy();
 
     const decodedToken = jwt.verify(token, process.env.SECRET || "secret");
-    expect(decodedToken.username).toBe("testuser");
+    expect(decodedToken.role).toBe("user");
   });
 
   test("should return correct capabilities based on role", () => {
