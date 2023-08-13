@@ -7,7 +7,7 @@ const tour = (sequelize, DataTypes) =>
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      field: 'Tour_id',
+      field: 'tour_id',
       unique: true,
     },
     description: {

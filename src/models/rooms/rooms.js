@@ -24,7 +24,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         defaultValue: [],
       },
       userRate:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true,
       },
       theRoomRate:{

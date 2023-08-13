@@ -20,7 +20,6 @@ const {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeModel,
-
   bookings,
   TourModel,
   GuideModel,
@@ -30,9 +29,7 @@ const {
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
-
 router.get("/:model", handleGetAll);
-
 router.get("/:model/:id", handleGetOne);
 router.post("/:model", handleCreate);
 router.put("/:model/:id", handleUpdate);
@@ -125,7 +122,9 @@ async function handleGetOne(req, res, next) {
         model.RoomModel,
         model.PaymentModel,
         model.ServiceModel,
-        model.CustomerModel
+        model.CustomerModel,
+        model.TourModel,
+        model.GuideModel
       );
       res.status(200).json(record);
     } else if (req.model.modelName == "rooms") {
@@ -133,6 +132,12 @@ async function handleGetOne(req, res, next) {
       res.status(200).json(records);
     } else if (req.model.modelName == "employee") {
       const records = await req.model.findone(id, EmployeeRoleModel);
+      res.status(200).json(records);
+    } else if (req.model.modelName == "guide") {
+      const records = await req.model.findone(id, TourModel);
+      res.status(200).json(records);
+    } else if (req.model.modelName == "tour") {
+      const records = await req.model.findone(id, GuideModel);
       res.status(200).json(records);
     } else {
       let id = req.params.id;
@@ -148,9 +153,8 @@ async function handleCreate(req, res, next) {
   try {
     if (req.model.modelName === "bookings") {
       const bookingPrice = parseInt(req.body.bookingPrice);
-      // console.log(req.body.check_out_date,"check out");
+
       let date_1 = new Date(req.body.check_out_date);
-      // console.log(date_1,"day1");
       let date_2 = new Date(req.body.check_in_date);
       let difference = date_1.getTime() - date_2.getTime();
       let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
@@ -159,13 +163,11 @@ async function handleCreate(req, res, next) {
       const theRoom = await model.rooms.get(roomID);
       const totalprice = theRoom.roomPrice * TotalDays;
       req.body.bookingCost = totalprice;
-      //////////
-      console.log(totalprice, "00000000000000");
+
       const paymentObj = await model.PaymentModel.create({
         amount: totalprice,
       });
       req.body.paymentID = paymentObj.payment_id;
-      //////////////
       let newRecord = await req.model.create(req.body);
       const userInfo = await model.users.get(newRecord.customer_id);
 
