@@ -136,6 +136,7 @@ module.exports = {
   tour: new DataCollection(TourModel),
   GuideModel,
   TourModel,
+  
   CustomerModel,
   RoomModel,
   BookingModel,
