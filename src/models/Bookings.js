@@ -44,7 +44,7 @@ const Booking = (sequelize, DataTypes) =>
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  number_of_booking:{
+  number_of_seats_inTour:{
     type: DataTypes.INTEGER,
     allowNull: true,
   }

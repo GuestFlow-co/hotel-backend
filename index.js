@@ -5,8 +5,9 @@ const { db } = require("./src/models");
 const { start } = require("./src/server");
 const PORT = process.env.PORT || 5000;
 
-// 
-db.sync({force: true})
+// {force: true}
+// { alter: true }
+db.sync()
   .then(() => {
     start(PORT);
   })
