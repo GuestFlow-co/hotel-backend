@@ -10,6 +10,9 @@ const model = require("../models/index");
 const { DataTypes } = require("sequelize");
 const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
+const bearer = require("../auth/bearer");
+const getmodel = require("../auth/get");
+
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -25,8 +28,8 @@ const {
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
-router.get("/:model", handleGetAll);
-router.get("/:model/:id", handleGetOne);
+router.get("/:model",getmodel, handleGetAll);
+router.get("/:model/:id", getmodel,handleGetOne);
 router.post("/:model", handleCreate);
 router.put("/:model/:id", handleUpdate);
 router.delete("/:model/:id", handleDelete);
@@ -100,7 +103,10 @@ async function handleGetAll(req, res, next) {
     } else if (req.model.modelName == "tour") {
       const records = await req.model.findAll(GuideModel);
       res.status(200).json(records);
-    } else {
+    }else if (req.model.modelName == "customer") {
+      const records = await req.model.findAll(BookingModel);
+      res.status(200).json(records)} 
+    else {
       let allRecords = await req.model.get();
       res.status(200).json(allRecords);
     }
@@ -287,7 +293,7 @@ async function handleUpdate(req, res, next) {
         amount:total_amount
       });
 
-console.log(existingPayment)
+      console.log(existingPayment)
         res.status(200).json(existingTour);
 
       } else {
