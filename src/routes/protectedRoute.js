@@ -16,7 +16,7 @@ router.get("/:model/:id", bearer, handleGetOne);
 router.post(
   "/:model",
   bearer,
-  this.model === "bookings" ? acl("read") : acl("delete"),
+  this.model === "bookings" ? acl("read") : acl("create"),
   handleCreate
 );
 router.put("/:model/:id", bearer, acl("update"), handleUpdate);

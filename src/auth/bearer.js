@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     if (!req.headers.authorization) {
       _authError();
     }
-
+    console.log(req.path);
     const token = req.headers.authorization.split(" ").pop();
     const validUser = await users.model.authenticateToken(token);
     req.user = validUser;

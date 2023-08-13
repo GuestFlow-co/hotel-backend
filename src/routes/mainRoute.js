@@ -11,6 +11,8 @@ const { Op } = require("sequelize");
 //     pass: process.env.PASS,
 //   },
 // });
+const bearer = require("../auth/bearer");
+
 const express = require("express");
 const model = require("../models/index");
 const { DataTypes } = require("sequelize");
@@ -245,7 +247,43 @@ async function handleUpdate(req, res, next) {
       console.log(req.body.theRoomRate);
       const x = await req.model.update(req.params.id, req.body);
       res.status(200).json(x);
-    } else {
+
+
+    }  else  if (req.model.modelName === "bookings") {
+      let newBooking = await req.model.update(req.params.id, req.body);
+      console.log(newBooking);
+        const existingTour = await TourModel.findByPk(newBooking.tourId);
+        if (!existingTour) {
+          return res.status(404).json({ message: "Tour not found" });
+        }
+        const newPeopleInTour = [
+          ...existingTour.people_in_tour,
+          newBooking.number_of_seats_inTour,
+        ];
+         const sumPeopleInTour = newPeopleInTour.reduce(
+      (sum, value) => sum + value,
+      0
+    );
+    let customerID = newBooking.customer_id
+    let seats =newBooking.number_of_seats_inTour
+    const obj=[{
+      customerID:customerID,
+      seats:seats
+    }]
+    console.log(obj);
+    const availableSeat =
+    sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
+
+  if (sumPeopleInTour <= existingTour.max_amount) {
+    await existingTour.update({
+      people_in_tour: newPeopleInTour,
+      availableSeat: availableSeat,
+      tour_customer: [...existingTour.tour_customer, obj]
+    });
+  }
+  res.status(200).json(newBooking);
+
+}else {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
     }
@@ -254,43 +292,6 @@ async function handleUpdate(req, res, next) {
   }
 }
 
-router.post("/tour/:id/add-people", async (req, res, next) => {
-  try {
-    const tourId = req.params.id;
-    const { number_of_booking_people } = req.body;
-
-    const existingTour = await TourModel.findByPk(tourId);
-
-    if (!existingTour) {
-      return res.status(404).json({ message: "Tour not found" });
-    }
-
-    const newPeopleInTour = [
-      ...existingTour.people_in_tour,
-      number_of_booking_people,
-    ];
-    const sumPeopleInTour = newPeopleInTour.reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
-    const availableSeat =
-      sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
-
-    if (sumPeopleInTour <= existingTour.max_amount) {
-      await existingTour.update({
-        people_in_tour: newPeopleInTour,
-        availableSeat: availableSeat,
-      });
-
-      res.status(200).json(existingTour);
-    } else {
-      res.status(400).json({ message: "Exceeded max capacity" });
-    }
-  } catch (err) {
-    next(err);
-  }
-});
 
 async function handleDelete(req, res, next) {
   try {
