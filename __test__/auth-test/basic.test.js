@@ -68,4 +68,43 @@ describe('Authentication Middleware', () => {
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.send).toHaveBeenCalledWith('Invalid Login');
   });
+
+
+
+  test('should call next() if valid authorization header is provided', async () => {
+    const user = 'farah';
+    const pass = '123';
+
+    const encodedCredentials = Buffer.from(`${user}:${pass}`).toString('base64');
+    req.headers.authorization = `Basic ${encodedCredentials}`;
+
+    users.model.authenticateBasic = jest.fn().mockResolvedValue({ username: user });
+
+    await middleware(req, res, next);
+
+    expect(users.model.authenticateBasic).toHaveBeenCalledWith(user, pass);
+    expect(req.user).toEqual({ username: user });
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.send).not.toHaveBeenCalled();
+  });
+
+  test('test', async () => {
+    const user = 'aya';
+    const pass = '124';
+
+    const encodedCredentials = Buffer.from(`${user}:${pass}`).toString('base64');
+    req.headers.authorization = `Basic ${encodedCredentials}`;
+
+    users.model.authenticateBasic = jest.fn().mockResolvedValue({ username: user });
+
+    await middleware(req, res, next);
+
+    expect(users.model.authenticateBasic).toHaveBeenCalledWith(user, pass);
+    expect(req.user).toEqual({ username: user });
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.send).not.toHaveBeenCalled();
+  });
+
 });
