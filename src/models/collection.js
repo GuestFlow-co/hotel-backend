@@ -1,5 +1,6 @@
 "use strict";
-
+const { Op } = require("sequelize");
+const dd = require("./index")
 class DataCollection {
   constructor(model) {
     this.model = model;
@@ -76,6 +77,42 @@ class DataCollection {
     });
     return records;
   }
+  // async idrees(model,start1,end1) {
+  //   const start = new Date(start1)
+  // const end = new Date(end1)
+  //   console.log(start,end,"0000000");
+   
+  //   const records = await this.model.findAll({
+  //     include: [{ model: model ,
+  //     required:false,
+  //     where :{
+  //       [Op.or]:[
+  //         {
+  //           check_in_date:{
+  //             [Op.between]:[new Date(start1),new Date(end1)]
+  //           }
+  //         },
+  //         {
+  //           check_out_date:{
+  //             [Op.between]:[new Date(start1),new Date(end1)]
+  //           }
+  //         },
+  //         {
+  //           check_in_date:{
+  //             [Op.lte]:new Date(start1)
+
+  //           },
+  //           check_out_date:{
+  //             [Op.gte]:new Date(end1)
+
+  //           }
+  //         }
+  //       ]
+  //     }
+  //     }]
+  //   });
+  //   return records;
+  // }
   async findone(id, model) {
     const records = await this.model.findOne({
       where: { [`${this.model.name.toLowerCase()}_id`]: id },

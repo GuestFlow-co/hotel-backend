@@ -108,7 +108,6 @@ module.exports = {
   tour: new DataCollection(TourModel),
   GuideModel,
   TourModel,
-  
   CustomerModel,
   RoomModel,
   BookingModel,
@@ -119,5 +118,4 @@ module.exports = {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeRoleAssignmentModel,
-
 };

@@ -20,8 +20,8 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         allowNull: false,
     },
     rate: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER), 
-        // defaultValue: [],
+        type: DataTypes.ARRAY(DataTypes.JSON), 
+        defaultValue: [],
       },
       userRate:{
         type: DataTypes.FLOAT,

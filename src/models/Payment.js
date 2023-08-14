@@ -15,6 +15,15 @@ const Payments = (sequelize, DataTypes) =>
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    current_payment:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    previous_payments: {
+      type: DataTypes.ARRAY(DataTypes.JSON), 
+      defaultValue: [],
+      
+    },
     status: {
       type: DataTypes.STRING,
       defaultValue: "pending",

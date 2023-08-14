@@ -28,46 +28,73 @@ const {
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
-router.get("/:model",getmodel, handleGetAll);
-router.get("/:model/:id", getmodel,handleGetOne);
+// router.get("/rooms", handleGetunbookedRoom);
+router.get("/:model", handleGetAll);
+router.get("/:model/:id",handleGetOne);
 router.post("/:model", handleCreate);
 router.put("/:model/:id", handleUpdate);
 router.delete("/:model/:id", handleDelete);
 
+// async function handleGetunbookedRoom(req,res,next) {
+//   const start = new Date(req.query.startDate)
+//   const end = new Date(req.query.endDate)
+  
+//   const records = await model.rooms.idrees(BookingModel,req.query.startDate,req.query.endDate);
+//   res.status(200).json(records)
+// }
 async function handleGetAll(req, res, next) {
   try {
     if (req.model.modelName === "rooms") {
-      const { check_in_date, check_out_date } = req.query;
-      if (!check_in_date && !check_out_date) {
+      // const { check_in_dat, check_out_dat } = req.query;
+      const check_in_date_string = req.query.check_in_dat;
+      const check_out_date_string = req.query.check_out_dat;
+      
+      console.log(typeof check_in_date_string ,typeof check_out_date_string ,"nnnnnnnnnnnnn");
+      // Parse the date strings into Date objects
+      const check_in_dat = new Date(check_in_date_string);
+      const check_out_dat = new Date(check_out_date_string);  
+      console.log( check_in_dat,"1561651");  
+      console.log( check_out_dat,"1561651");  
+
+      if (!check_in_dat && !check_out_dat) {
         const records = await req.model.findAll(RoomFeatureModel);
 
         res.status(200).json(records);
       }
-      if (check_in_date && check_out_date) {
+      if (check_in_dat && check_out_dat) {
         const bookedRooms = await model.bookings.findAlls({
           where: {
             [Op.or]: [
               {
-                check_in_date: { [Op.gt]: check_out_date },
-                check_out_date: { [Op.lt]: check_in_date },
+                check_in_date: {
+                  [Op.between]: [check_in_dat, check_out_dat]
+                }
               },
-            ],
-          },
-          attributes: ["theRoomID"],
-          raw: true,
+              
+            ]
+          }
+          // where: {
+          //   [Op.or]: [
+          //     {
+          //       check_in_date: { [Op.gt]: check_out_date },
+          //       check_out_date: { [Op.lt]: check_in_date },
+          //     },
+          //   ],
+          // },
+          // attributes: ["theRoomID"],
+          // raw: true,
         });
-
+        console.log(bookedRooms[0].check_in_date,"ttttttttttttttt");
         const bookedRoomIds = bookedRooms.map((booking) => booking.theRoomID);
-        console.log(bookedRoomIds);
+        console.log(bookedRoomIds,"11111111111");
 
         const records = await req.model.findAll(RoomFeatureModel);
         const allRoomsID = records.map((booking) => booking.Room_id);
-        console.log(allRoomsID);
         const unbookedRoomIds = allRoomsID.filter(
           (roomId) => !bookedRoomIds.includes(roomId)
-        );
+          );
+          console.log(unbookedRoomIds,"000000");
 
-        console.log(unbookedRoomIds[0]);
 
         const allRooms = [];
 
@@ -171,8 +198,9 @@ async function handleCreate(req, res, next) {
         amount: totalprice,
       });
       req.body.paymentID = paymentObj.payment_id;
-      let newRecord = await req.model.create(req.body);
+    
 
+let newRecord = await req.model.create(req.body);
       //email
       const userInfo = await model.users.get(newRecord.customer_id);
       const roomid = newRecord.theRoomID;
@@ -204,9 +232,10 @@ async function handleCreate(req, res, next) {
       const servicePrice = parseInt(
         book.services.reduce((acc, service) => acc + service.cost, 0)
       );
+      const existingPayment = await PaymentModel.findByPk(book.paymentID);
 
       await model.PaymentModel.update(
-        { amount: servicePrice + book.bookingCost },
+        { amount: existingPayment.amount+servicePrice  },
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
@@ -233,6 +262,18 @@ async function handleUpdate(req, res, next) {
         model.TourModel,
         model.GuideModel
       );
+      const obj=[{
+        previous_payment:req.body.current_payment,
+        previous_payment_date: new Date()
+      }]
+      const existingPayment = await PaymentModel.findByPk(req.params.id);
+      console.log(...existingPayment.previous_payments,"eeeeeeeeeeeeeee");
+    const x =  await existingPayment.update({
+        amount: existingPayment.amount -req.body.current_payment,
+        previous_payments: [...existingPayment.previous_payments, obj]
+      });
+      console.log(x,"2222222222222222");
+
       let updatedbooking = await model.rooms.update(book.theRoomID, {
         roomStatus: "dirty",
       });
@@ -240,11 +281,24 @@ async function handleUpdate(req, res, next) {
     } else if (req.model.modelName === "rooms") {
 
       let updatedRecord = await req.model.update(req.params.id, req.body);
-      req.body.rate.push(req.body.userRate);
-      const ratings = updatedRecord.rate;
+      const existingroom = await RoomModel.findByPk(req.params.id);
+      const updatedRates = [
+        ...existingroom.rate,
+        {
+          userRate: newUserRate
+        }
+      ];
+      
+      await existingroom.update({
+        rate: updatedRates
+      });
+      
+      // req.body.rate.push(req.body.userRate);
+      const ratings = existingroom.rate.map(rate => rate.userRate)
+            console.log(ratings);
       const totalRatings = ratings.length;
       const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
-      const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 1;
+      const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 5;
       req.body.theRoomRate = averageRating;
       console.log(req.body.theRoomRate);
       const x = await req.model.update(req.params.id, req.body);
