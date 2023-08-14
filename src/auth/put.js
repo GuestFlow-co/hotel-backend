@@ -1,7 +1,7 @@
 "use strict";
 
 const models = require("../models/index");
-const { users, BookingModel, CustomerModel } = require("../models/index");
+const { users, BookingModel,CustomerModel } = require("../models/index");
 
 module.exports = async (req, res, next) => {
   try {
@@ -17,15 +17,35 @@ module.exports = async (req, res, next) => {
     req.user = validUser;
     req.token = validUser.token;
 
-    if (path.startsWith("bookings/") && req.user.role.includes("user")) {
-      const bookingId = path.split("/")[1];
-      const existingBooking = await models.customer.findone(req.user.user_id, BookingModel);
-      if (existingBooking && existingBooking.bookings.some(booking => booking.booking_id === bookingId)) {
-        next();
-      } else {
-        return _authError();
+    console.log(req.user.user_id);
+    const existingBooking = await models.bookings.findAlls({
+      where: {
+        customer_id: req.user.user_id
       }
-    } else if (req.user.role.includes("admin")) {
+    });
+    console.log(existingBooking);
+    if (req.params.id ) {
+      if (
+        (path === `rooms/${existingBooking[0].theRoomID}` ||
+          path === `user/${req.user.user_id}` ||
+          path === `payments/${existingBooking[0].paymentID}` ||
+          path === `bookings/${existingBooking[0].booking_id}`) &&
+        req.user.role.includes("user")
+      ) {
+        next();
+      } 
+    } else if (
+      (path === `rooms/${req.params.id}` ||
+      path === `bookings/${req.params.id}` ||
+      path === `payments/${req.params.id}` ||
+      path === `bookedServices/${req.params.id}` ||
+      path === `RoomsFeatures/${req.params.id}` 
+
+      &&
+      req.user.role.includes("employee"))){
+
+    }  
+    else if (req.user.role.includes("admin") ) {
       next();
     } else {
       return _authError();
@@ -35,6 +55,6 @@ module.exports = async (req, res, next) => {
   }
 
   function _authError() {
-    next("Invalid Login");
+    next("Unauthorized");
   }
 };

@@ -1,7 +1,5 @@
-"use strict";
-
 const models = require("../models/index");
-const { users, BookingModel, CustomerModel } = require("../models/index");
+const { users, BookingModel,CustomerModel } = require("../models/index");
 
 module.exports = async (req, res, next) => {
   try {
@@ -17,43 +15,30 @@ module.exports = async (req, res, next) => {
     req.user = validUser;
     req.token = validUser.token;
 
-    if (req.method === "DELETE") {
-      if (path.startsWith("bookings/") && req.user.role.includes("user")) {
-        const bookingId = path.split("/")[1];
-        const existingBooking = await models.customer.findone(req.user.user_id, BookingModel);
-        if (existingBooking && existingBooking.bookings.some(booking => booking.booking_id === bookingId)) {
-          next();
-        } else {
-          return _authError();
+    console.log(req.user.user_id);
+      const existingBooking = await models.bookings.findAlls({
+        where: {
+          customer_id: req.user.user_id
         }
-      } else if (req.user.role.includes("admin")) {
-        next();
-      } else {
-        return _authError();
-      }
-    } else if (req.params.id) {
-      const existingBooking = await models.customer.findone(req.user.user_id, BookingModel);
+      });
+    console.log(existingBooking);
+    if (req.params.id ) {
       if (
-        (path === `rooms/${req.params.id}` ||
-          path === `services/${req.params.id}` ||
-          path === `guide/${req.params.id}` ||
-          path === `tour/${req.params.id}` ||
-          path === `bookings/${existingBooking.bookings[0].booking_id}`) &&
+        (
+          path === `user/${req.user.user_id}` ||
+          path === `bookings/${existingBooking[0].booking_id}`) &&
         req.user.role.includes("user")
       ) {
         next();
-      } else {
-        return _authError();
-      }
+      } 
     } else if (
-      (path === "rooms" ||
-        path === "services" ||
-        path === "guide" ||
-        path === "tour") &&
-      req.user.role.includes("user")
-    ) {
-      next();
-    } else if (req.user.role.includes("admin") || req.user.role.includes("employee")) {
+      (
+      path === `bookings/${req.params.id}`      
+      &&
+      req.user.role.includes("employee"))){
+
+    }  
+    else if (req.user.role.includes("admin") ) {
       next();
     } else {
       return _authError();
@@ -63,6 +48,6 @@ module.exports = async (req, res, next) => {
   }
 
   function _authError() {
-    next("Invalid Login");
+    next("Unauthorized");
   }
 };
