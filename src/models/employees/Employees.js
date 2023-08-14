@@ -24,7 +24,7 @@ const Employees = (sequelize, DataTypes) =>
       allowNull: false,
     },
     salary: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   });

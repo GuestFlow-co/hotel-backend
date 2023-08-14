@@ -103,7 +103,7 @@ module.exports = {
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
   RoomsFeatures: new DataCollection(RoomsFeatures),
-  customer: new DataCollection(CustomerModel),
+  user: new DataCollection(CustomerModel),
   guide: new DataCollection(GuideModel),
   tour: new DataCollection(TourModel),
   GuideModel,

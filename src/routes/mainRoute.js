@@ -103,7 +103,7 @@ async function handleGetAll(req, res, next) {
     } else if (req.model.modelName == "tour") {
       const records = await req.model.findAll(GuideModel);
       res.status(200).json(records);
-    }else if (req.model.modelName == "customer") {
+    }else if (req.model.modelName == "user") {
       const records = await req.model.findAll(BookingModel);
       res.status(200).json(records)} 
     else {
@@ -229,7 +229,9 @@ async function handleUpdate(req, res, next) {
         model.RoomModel,
         model.PaymentModel,
         model.ServiceModel,
-        model.CustomerModel
+        model.CustomerModel,
+        model.TourModel,
+        model.GuideModel
       );
       let updatedbooking = await model.rooms.update(book.theRoomID, {
         roomStatus: "dirty",
