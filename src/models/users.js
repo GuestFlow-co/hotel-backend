@@ -26,7 +26,7 @@ const userModel = (sequelize, DataTypes) => {
       defaultValue: "user",
     },
     verificationToken: {
-      type: DataTypes.STRING, // Adjust the data type based on your requirements
+      type: DataTypes.STRING,
       allowNull: true,
     },
     emailVerified: {
@@ -63,14 +63,7 @@ const userModel = (sequelize, DataTypes) => {
     user.password = hashedPass;
   });
 
-  // model.authenticateBasic = async function (username, password) {
-  //   const user = await this.findOne({ where: { username } });
-  //   const valid = await bcrypt.compare(password, user.password);
-  //   if (valid) {
-  //     return user;
-  //   }
-  //   throw new Error("Invalid User");
-  // };
+
   model.authenticateBasic = async function (username, password) {
     const user = await this.findOne({ where: { username } });
     if (!user) {

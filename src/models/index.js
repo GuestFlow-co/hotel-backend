@@ -5,23 +5,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const DataCollection = require("./collection");
 const usersModel = require("./users");
 
-// const DB_URL =
-//   process.env.NODE_ENV === "test" ? "sqlite:memory:" : process.env.DATABASE_URL;
 const DATABASE_URL = process.env.DATABASE_URL || "sqlite:memory:";
 
-// let sequelizeOptions =
-//   process.env.NODE_ENV === "production"
-//     ? {
-//         dialectOptions: {
-//           ssl: {
-//             require: true,
-//             rejectUnauthorized: false,
-//           },
-//         },
-//       }
-//     : {};
-
-// const CustomerModel = require("./Customers")(sequelize, DataTypes);
 const sequelize = new Sequelize(DATABASE_URL);
 
 const users = usersModel(sequelize, DataTypes);
@@ -32,7 +17,7 @@ const PaymentModel = require("./Payment")(sequelize, DataTypes);
 const EmployeeModel = require("./employees/Employees")(sequelize, DataTypes);
 const ServiceModel = require("./services")(sequelize, DataTypes);
 const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
-const RoomsFratuer = require("./RoomsFeatures")(sequelize, DataTypes);
+const RoomsFeatures = require("./RoomsFeatures")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
 
@@ -51,27 +36,14 @@ const CustomerModel = require("./users")(sequelize, DataTypes);
 const TourModel = require("./tour/tour")(sequelize, DataTypes);
 const GuideModel = require("./guide/guide")(sequelize, DataTypes);
 
-// const AmenityModel = require("./Amenities")(sequelize, DataTypes);
-// const HotelAmenityModel = require("./Hotel_Amenities")(sequelize, DataTypes);
-
-// Define relationships
-// CustomerModel.hasMany(BookingModel, { foreignKey: "customer_id" });
-// BookingModel.belongsTo(CustomerModel, { foreignKey: "customer_id" });
-
 GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
 BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
 
-GuideModel.hasMany(TourModel, { foreignKey: "tourId" });
-TourModel.belongsTo(GuideModel, { foreignKey: "tourId" });
+GuideModel.hasMany(TourModel, { foreignKey: "guideId" });
+TourModel.belongsTo(GuideModel, { foreignKey: "guideId" });
 
 TourModel.hasMany(BookingModel, { foreignKey: "tourId" });
 BookingModel.belongsTo(TourModel, { foreignKey: "tourId" });
-
-// GuideModel.belongsTo(TourModel, { foreignKey: "guide_id" });
-// TourModel.hasMany(GuideModel, { foreignKey: "guide_id" });
-
-// GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
-// BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
 
 ResetToken.belongsTo(users, { foreignKey: "userID" });
 
@@ -103,15 +75,15 @@ EmployeeModel.belongsToMany(RoomModel, {
 });
 
 
-EmployeeRoleModel.hasMany(EmployeeModel, { foreignKey: "roolsID" });
-EmployeeModel.belongsTo(EmployeeRoleModel, { foreignKey: "roolsID" });
+EmployeeRoleModel.hasMany(EmployeeModel, { foreignKey: "roleID" });
+EmployeeModel.belongsTo(EmployeeRoleModel, { foreignKey: "roleID" });
 
 RoomModel.belongsToMany(RoomFeatureModel, {
-  through: RoomsFratuer,
+  through: RoomsFeatures,
   foreignKey: "rooms_id",
 });
 RoomFeatureModel.belongsToMany(RoomModel, {
-  through: RoomsFratuer,
+  through: RoomsFeatures,
   foreignKey: "feature_id",
 });
 
@@ -130,7 +102,7 @@ module.exports = {
   roomTypeFeatures: new DataCollection(RoomTypeFeatureModel),
   employeeRoles: new DataCollection(EmployeeRoleModel),
   employeeRoleAssignments: new DataCollection(EmployeeRoleAssignmentModel),
-  RoomsFratuer: new DataCollection(RoomsFratuer),
+  RoomsFeatures: new DataCollection(RoomsFeatures),
   customer: new DataCollection(CustomerModel),
   guide: new DataCollection(GuideModel),
   tour: new DataCollection(TourModel),
@@ -147,6 +119,5 @@ module.exports = {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeRoleAssignmentModel,
-  // Amenities,
-  // HotelAmenities,
+
 };

@@ -18,5 +18,3 @@ const room_features = (sequelize, DataTypes) =>
   });
 module.exports = room_features;
 
-// const roomFeaturesCollection = new collection(room_features);
-// module.exports = roomFeaturesCollection;
