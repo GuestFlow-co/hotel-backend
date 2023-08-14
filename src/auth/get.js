@@ -50,6 +50,6 @@ module.exports = async (req, res, next) => {
   }
 
   function _authError() {
-    next("Invalid Login");
+    next("Unauthorized");
   }
 };
