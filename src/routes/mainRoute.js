@@ -12,7 +12,9 @@ const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
 const bearer = require("../auth/bearer");
 const getmodel = require("../auth/get");
-
+const postmodel = require("../auth/post")
+const putmodel =require("../auth/put")
+const deletemodel =require("../auth/delete")
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -29,11 +31,11 @@ const router = express.Router();
 
 router.param("model", modelsMiddleware);
 // router.get("/rooms", handleGetunbookedRoom);
-router.get("/:model", handleGetAll);
+router.get("/:model",getmodel, handleGetAll);
 router.get("/:model/:id",handleGetOne);
-router.post("/:model", handleCreate);
-router.put("/:model/:id", handleUpdate);
-router.delete("/:model/:id", handleDelete);
+router.post("/:model",postmodel, handleCreate);
+router.put("/:model/:id",putmodel, handleUpdate);
+router.delete("/:model/:id", deletemodel,handleDelete);
 
 // async function handleGetunbookedRoom(req,res,next) {
 //   const start = new Date(req.query.startDate)
@@ -285,7 +287,7 @@ async function handleUpdate(req, res, next) {
       const updatedRates = [
         ...existingroom.rate,
         {
-          userRate: newUserRate
+          userRate: req.body.userRate
         }
       ];
       
