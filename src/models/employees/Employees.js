@@ -11,7 +11,7 @@ const Employees = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       allowNull: false,
     },
-    roolsID: {
+    roleID: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
@@ -29,11 +29,5 @@ const Employees = (sequelize, DataTypes) =>
     },
   });
 
-// Employees.associate = (models) => {
-//   Employees.belongsToMany(models.EmployeeRole, {
-//     through: models.EmployeeRoleAssignment,
-//     foreignKey: "employee_id",
-//   });
-// };
 
 module.exports = Employees;

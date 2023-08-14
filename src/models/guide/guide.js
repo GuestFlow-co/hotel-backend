@@ -12,7 +12,7 @@ const guide = (sequelize, DataTypes) =>
     lastName: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     phoneNumber: { type: DataTypes.STRING, allowNull: false, unique: true },
-    avalibility:{
+    availability:{
         type:DataTypes.BOOLEAN,
         defaultValue: true
      },
@@ -23,11 +23,6 @@ const guide = (sequelize, DataTypes) =>
      
   });
   
-    // guide.associate = (models) => {
-    //   guide.belongsToMany(models.EmployeeRole, {
-    //     through: models.EmployeeRoleAssignment,
-    //     foreignKey: "employee_id",F
-    //   });}
 
 
 module.exports =  guide ;

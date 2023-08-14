@@ -260,14 +260,25 @@ async function handleUpdate(req, res, next) {
         (sum, value) => sum + value,
         0
       );
+      let customerID = updatedRecord.customer_id
+      let seats =updatedRecord.number_of_seats_inTour
+      const obj=[{
+        customerID:customerID,
+        seats:seats
+      }]
+      console.log(obj);
       const availableSeat =
-        sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
+      sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
   
-      if (sumPeopleInTour <= existingTour.max_amount) {
-        await existingTour.update({
-          people_in_tour: newPeopleInTour,
-          availableSeat: availableSeat,
-        });
+    if (sumPeopleInTour <= existingTour.max_amount) {
+      await existingTour.update({
+        people_in_tour: newPeopleInTour,
+        availableSeat: availableSeat,
+        tour_customer: [...existingTour.tour_customer, obj]
+      });
+    
+    res.status(200).json(updatedRecord);
+
   
 
        const total_tour_price = existingTour.Seat_price * req.body.number_of_seats_inTour
@@ -293,6 +304,7 @@ console.log(existingPayment)
       } else {
         res.status(400).json({ message: "Exceeded max capacity" });
       }
+
     } 
 
      else {
