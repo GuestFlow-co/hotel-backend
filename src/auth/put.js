@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
       return _authError();
     }
 
-    console.log(req.path);
+    // console.log(req.path);
     const path = req.path.substring(1);
     const token = req.headers.authorization.split(" ").pop();
     const validUser = await users.model.authenticateToken(token);
@@ -17,13 +17,16 @@ module.exports = async (req, res, next) => {
     req.user = validUser;
     req.token = validUser.token;
 
-    console.log(req.user.user_id);
+    console.log(path);
     const existingBooking = await models.bookings.findAlls({
       where: {
         customer_id: req.user.user_id
       }
     });
+    console.log(req.user.user_id);
     console.log(existingBooking);
+           console.log(req.user.role.includes("admin"))
+
     if (req.params.id ) {
       if (
         (path === `rooms/${existingBooking[0].theRoomID}` ||
@@ -34,22 +37,23 @@ module.exports = async (req, res, next) => {
       ) {
         next();
       } 
-    } else if (
+     else if (
       (path === `rooms/${req.params.id}` ||
       path === `bookings/${req.params.id}` ||
       path === `payments/${req.params.id}` ||
       path === `bookedServices/${req.params.id}` ||
-      path === `RoomsFeatures/${req.params.id}` 
-
+      path === `RoomsFeatures/${req.params.id}`)
       &&
-      req.user.role.includes("employee"))){
-
-    }  
-    else if (req.user.role.includes("admin") ) {
+      req.user.role.includes("employee")
+    ) {
+      next();
+    }
+    else if (path === `rooms/${req.params.id}` &&
+      req.user.role.includes("admin") ) {
       next();
     } else {
       return _authError();
-    }
+    }}
   } catch (e) {
     return _authError();
   }

@@ -10,7 +10,7 @@ describe("Tour Model", () => {
   });
 
   afterEach(async () => {
-    await Tour.destroy({ truncate: true });
+    await db.close();
   });
 
   afterAll(async () => {

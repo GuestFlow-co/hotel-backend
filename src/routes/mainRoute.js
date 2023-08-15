@@ -33,7 +33,7 @@ router.param("model", modelsMiddleware);
 // router.get("/rooms", handleGetunbookedRoom);
 router.get("/:model",getmodel, handleGetAll);
 router.get("/:model/:id",getmodel,handleGetOne);
-router.post("/:model",postmodel, handleCreate);
+router.post("/:model", handleCreate);
 router.put("/:model/:id",putmodel, handleUpdate);
 router.delete("/:model/:id", deletemodel,handleDelete);
 

@@ -11,7 +11,7 @@ describe("Tour Model", () => {
   });
 
   afterEach(async () => {
-    await User.destroy({ truncate: true });
+    await db.close();
   });
 
   afterAll(async () => {
