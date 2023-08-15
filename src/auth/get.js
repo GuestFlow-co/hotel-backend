@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
     req.token = validUser.token;
 
     
-    const existingBooking = await models.customer.findone(req.user.user_id,BookingModel);
+    const existingBooking = await models.user.findone(req.user.user_id,BookingModel);
     if (req.params.id ) {
       if (
         (path === `rooms/${req.params.id}` ||

@@ -31,7 +31,7 @@ module.exports = async (req, res, next) => {
       ) {
         next();
       } 
-    } else if (
+     else if (
       (
       path === `bookings/${req.params.id}`      
       &&
@@ -42,7 +42,7 @@ module.exports = async (req, res, next) => {
       next();
     } else {
       return _authError();
-    }
+    }}
   } catch (e) {
     return _authError();
   }
