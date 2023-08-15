@@ -1,6 +1,7 @@
 "use strict";
-const { Op } = require("sequelize");
-const dd = require("./index")
+// const { Op } = require("sequelize");
+// const dd = require("./index")
+
 class DataCollection {
   constructor(model) {
     this.model = model;
@@ -141,3 +142,4 @@ class DataCollection {
 }
 
 module.exports = DataCollection;
+

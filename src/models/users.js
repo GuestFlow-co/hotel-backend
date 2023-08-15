@@ -63,7 +63,6 @@ const userModel = (sequelize, DataTypes) => {
     user.password = hashedPass;
   });
 
-
   model.authenticateBasic = async function (username, password) {
     const user = await this.findOne({ where: { username } });
     if (!user) {
