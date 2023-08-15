@@ -25,6 +25,7 @@ const {
   PaymentModel,
   BookingModel,
   RoomModel,
+  rooms,
   EmployeeRoleAssignmentModel,
 } = require("../models/index");
 const router = express.Router();
@@ -33,7 +34,7 @@ router.param("model", modelsMiddleware);
 // router.get("/rooms", handleGetunbookedRoom);
 router.get("/:model",getmodel, handleGetAll);
 router.get("/:model/:id",getmodel,handleGetOne);
-router.post("/:model", handleCreate);
+router.post("/:model",postmodel, handleCreate);
 router.put("/:model/:id",putmodel, handleUpdate);
 router.delete("/:model/:id", deletemodel,handleDelete);
 
@@ -47,69 +48,48 @@ router.delete("/:model/:id", deletemodel,handleDelete);
 async function handleGetAll(req, res, next) {
   try {
     if (req.model.modelName === "rooms") {
-      // const { check_in_dat, check_out_dat } = req.query;
-      const check_in_date_string = req.query.check_in_dat;
-      const check_out_date_string = req.query.check_out_dat;
-      
-      console.log(typeof check_in_date_string ,typeof check_out_date_string ,"nnnnnnnnnnnnn");
+      const { check_in_date, check_out_date } = req.query;
+
       // Parse the date strings into Date objects
-      const check_in_dat = new Date(check_in_date_string);
-      const check_out_dat = new Date(check_out_date_string);  
-      console.log( check_in_dat,"1561651");  
-      console.log( check_out_dat,"1561651");  
+      const checkInDate = new Date(check_in_date);
+      const checkOutDate = new Date(check_out_date);
 
-      if (!check_in_dat && !check_out_dat) {
-        const records = await req.model.findAll(RoomFeatureModel);
-
-        res.status(200).json(records);
-      }
-      if (check_in_dat && check_out_dat) {
-        const bookedRooms = await model.bookings.findAlls({
-          where: {
-            [Op.or]: [
-              {
-                check_in_date: {
-                  [Op.between]: [check_in_dat, check_out_dat]
-                }
+      const bookedRoomIds = await bookings.model.findAll({
+        attributes: ["theRoomID"],
+        where: {
+          [Op.or]: [
+            {
+              check_in_date: {
+                [Op.between]: [checkInDate, checkOutDate],
               },
-              
-            ]
-          }
-          // where: {
-          //   [Op.or]: [
-          //     {
-          //       check_in_date: { [Op.gt]: check_out_date },
-          //       check_out_date: { [Op.lt]: check_in_date },
-          //     },
-          //   ],
-          // },
-          // attributes: ["theRoomID"],
-          // raw: true,
-        });
-        console.log(bookedRooms[0].check_in_date,"ttttttttttttttt");
-        const bookedRoomIds = bookedRooms.map((booking) => booking.theRoomID);
-        console.log(bookedRoomIds,"11111111111");
+            },
+            {
+              check_out_date: {
+                [Op.between]: [checkInDate, checkOutDate],
+              },
+            },
+            {
+              [Op.and]: [
+                { check_in_date: { [Op.lt]: checkInDate } },
+                { check_out_date: { [Op.gt]: checkOutDate } },
+              ],
+            },
+          ],
+        },
+        raw: true,
+      });
 
-        const records = await req.model.findAll(RoomFeatureModel);
-        const allRoomsID = records.map((booking) => booking.Room_id);
-        const unbookedRoomIds = allRoomsID.filter(
-          (roomId) => !bookedRoomIds.includes(roomId)
-          );
-          console.log(unbookedRoomIds,"000000");
+      const bookedRoomIdList = bookedRoomIds.map((booking) => booking.theRoomID);
+
+      const unbookedRooms = await rooms.model.findAll({
+        where: {
+          Room_id: { [Op.notIn]: bookedRoomIdList },
+        },
+      });
 
 
-        const allRooms = [];
 
-        for (let i = 0; i < unbookedRoomIds.length; i++) {
-          let roombythisid = await req.model.findone(
-            unbookedRoomIds[i],
-            RoomFeatureModel
-          );
-          allRooms.push(roombythisid);
-        }
-
-        res.status(200).json(allRooms);
-      }
+      res.status(200).json(unbookedRooms);
     } else if (req.model.modelName == "bookings") {
       const record = await req.model.readAll(
         model.RoomModel,
@@ -312,6 +292,7 @@ async function handleUpdate(req, res, next) {
 
       let updatedRecord = await req.model.update(req.params.id, req.body);
       const existingTour = await TourModel.findByPk(updatedRecord.tourId);
+      console.log(existingTour);
       if (!existingTour) {
         return res.status(404).json({ message: "Tour not found" });
       }

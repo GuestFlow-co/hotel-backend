@@ -1,5 +1,5 @@
 const models = require("../models/index");
-const { users, BookingModel,CustomerModel } = require("../models/index");
+const { users} = require("../models/index");
 
 module.exports = async (req, res, next) => {
   try {
@@ -22,27 +22,30 @@ module.exports = async (req, res, next) => {
         }
       });
     console.log(existingBooking);
-    if (req.params.id ) {
       if (
         (
           path === `user/${req.user.user_id}` ||
           path === `bookings/${existingBooking[0].booking_id}`) &&
         req.user.role.includes("user")
       ) {
+        console.log("999999999999999");
         next();
       } 
      else if (
+
+      req.user.role.includes("employee") &&
       (
       path === `bookings/${req.params.id}`      
-      &&
-      req.user.role.includes("employee"))){
-
+      )){
+        next();
+        console.log("66666666666666");
     }  
     else if (req.user.role.includes("admin") ) {
+      console.log("0000000000000000000");
       next();
     } else {
       return _authError();
-    }}
+    }
   } catch (e) {
     return _authError();
   }

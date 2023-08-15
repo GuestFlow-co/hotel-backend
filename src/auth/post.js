@@ -1,7 +1,7 @@
 "use strict";
 
 const models = require("../models/index");
-const { users, BookingModel, CustomerModel } = require("../models/index");
+const { users,  } = require("../models/index");
 
 module.exports = async (req, res, next) => {
   try {
@@ -16,7 +16,6 @@ module.exports = async (req, res, next) => {
     req.user = validUser;
     req.token = validUser.token;
     
-    console.log(req,"00000000000000");
      
       if (
         (path === "bookings" || path === "bookedServices"  ) &&  req.user.role.includes("user")
