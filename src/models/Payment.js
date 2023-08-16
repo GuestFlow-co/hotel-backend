@@ -21,7 +21,7 @@ const Payments = (sequelize, DataTypes) =>
     },
     previous_payments: {
       type: DataTypes.ARRAY(DataTypes.JSON), 
-      // defaultValue: [],
+      defaultValue: [],
       
     },
     status: {

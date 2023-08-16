@@ -32,7 +32,7 @@ const tour = (sequelize, DataTypes) =>
     },
     people_in_tour: {
       type: DataTypes.ARRAY(DataTypes.INTEGER), 
-      // defaultValue: [],
+      defaultValue: [],
       
       // type: DataTypes.JSON, // or DataTypes.STRING if you prefer
       // defaultValue: '[]',   // Initialize with an empty JSON array
@@ -44,9 +44,9 @@ const tour = (sequelize, DataTypes) =>
       //   this.setDataValue('people_in_tour', JSON.stringify(value));
       // },
     },
-     max_amount:{
+     max_capacity:{
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
     availableSeat:{
       type: DataTypes.INTEGER,
@@ -54,7 +54,7 @@ const tour = (sequelize, DataTypes) =>
     },
     tour_customer: {
       type: DataTypes.ARRAY(DataTypes.JSON), 
-      // defaultValue: [],
+      defaultValue: [],
   
       
     //   type: DataTypes.JSON, // or DataTypes.STRING if you prefer

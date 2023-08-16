@@ -19,19 +19,21 @@ module.exports = async (req, res, next) => {
 
     
     const existingBooking = await models.user.findone(req.user.user_id,BookingModel);
+    console.log(existingBooking);
     if (req.params.id ) {
       if (
         (path === `rooms/${req.params.id}` ||
           path === `services/${req.params.id}` ||
           path === `guide/${req.params.id}` ||
           path === `tour/${req.params.id}` ||
-          path === `bookings/${existingBooking.bookings[0].booking_id}`) &&
+          path === `payments/${req.params.id}` ||
+          path === `bookings/${req.params.id}`) &&
         req.user.role.includes("user")
       ) {
         next();
-      } else {
-        return _authError();
-      }
+      } else if (req.user.role.includes("admin") || req.user.role.includes("employee")) {
+        console.log("111111111111");
+        next();}
     } else if (
       (path === "rooms" ||
         path === "services" ||
@@ -41,6 +43,7 @@ module.exports = async (req, res, next) => {
     ) {
       next();
     } else if (req.user.role.includes("admin") || req.user.role.includes("employee")) {
+      console.log("111111111111");
       next();
     } else {
       return _authError();

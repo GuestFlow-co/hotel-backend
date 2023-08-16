@@ -19,10 +19,8 @@ const Employees = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       allowNull: false,
     },
-    position: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+
     salary: {
       type: DataTypes.INTEGER,
       allowNull: false,

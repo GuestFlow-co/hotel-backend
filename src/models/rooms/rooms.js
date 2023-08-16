@@ -19,6 +19,10 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    room_capacity: {
+      type: DataTypes.STRING,
+      allowNull: false,
+  },
     rate: {
         type: DataTypes.ARRAY(DataTypes.JSON), 
         // defaultValue: [],

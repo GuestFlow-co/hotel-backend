@@ -23,37 +23,38 @@ module.exports = async (req, res, next) => {
         customer_id: req.user.user_id
       }
     });
-    console.log(req.user.user_id);
-    console.log(existingBooking);
-           console.log(req.user.role.includes("admin"))
+    // console.log(req.user.user_id);
+    // console.log(existingBooking);
+    //        console.log(req.user.role.includes("admin"))
 
-    if (req.params.id ) {
       if (
+        req.user.role.includes("user") &&
         (path === `rooms/${existingBooking[0].theRoomID}` ||
           path === `user/${req.user.user_id}` ||
           path === `payments/${existingBooking[0].paymentID}` ||
-          path === `bookings/${existingBooking[0].booking_id}`) &&
-        req.user.role.includes("user")
+          path === `bookings/${existingBooking[0].booking_id}`) 
       ) {
         next();
       } 
      else if (
+    
+      req.user.role.includes("employee")  &&
       (path === `rooms/${req.params.id}` ||
       path === `bookings/${req.params.id}` ||
       path === `payments/${req.params.id}` ||
       path === `bookedServices/${req.params.id}` ||
       path === `RoomsFeatures/${req.params.id}`)
-      &&
-      req.user.role.includes("employee")
+   
     ) {
       next();
     }
-    else if (path === `rooms/${req.params.id}` &&
+    else if (
       req.user.role.includes("admin") ) {
+        console.log("00000000000");
       next();
     } else {
       return _authError();
-    }}
+    }
   } catch (e) {
     return _authError();
   }

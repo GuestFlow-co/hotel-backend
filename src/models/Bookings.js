@@ -28,10 +28,7 @@ const Booking = (sequelize, DataTypes) =>
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    payment_status: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+   
     customer_id: {
       type: DataTypes.INTEGER,
       allowNull: true,

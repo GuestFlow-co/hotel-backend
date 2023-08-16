@@ -11,7 +11,7 @@ const guide = (sequelize, DataTypes) =>
     firstName: { type: DataTypes.STRING, allowNull: false },
     lastName: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
-    phoneNumber: { type: DataTypes.STRING, allowNull: false, unique: true },
+    phoneNumber: { type: DataTypes.INTEGER, allowNull: false, unique: true },
     availability:{
         type:DataTypes.BOOLEAN,
         defaultValue: true
