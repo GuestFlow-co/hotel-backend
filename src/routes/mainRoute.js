@@ -31,26 +31,23 @@ const {
 const router = express.Router();
 
 router.param("model", modelsMiddleware);
-// router.get("/rooms", handleGetunbookedRoom);
-router.get("/:model",getmodel, handleGetAll);
-router.get("/:model/:id",getmodel,handleGetOne);
-router.post("/:model",postmodel, handleCreate);
-router.put("/:model/:id",putmodel, handleUpdate);
-router.delete("/:model/:id", deletemodel,handleDelete);
+router.get("/:model", handleGetAll);
+router.get("/:model/:id",handleGetOne);
+router.post("/:model", handleCreate);
+router.put("/:model/:id", handleUpdate);
+router.delete("/:model/:id",handleDelete);
 
-// async function handleGetunbookedRoom(req,res,next) {
-//   const start = new Date(req.query.startDate)
-//   const end = new Date(req.query.endDate)
-  
-//   const records = await model.rooms.idrees(BookingModel,req.query.startDate,req.query.endDate);
-//   res.status(200).json(records)
-// }
+
 async function handleGetAll(req, res, next) {
   try {
     if (req.model.modelName === "rooms") {
       const { check_in_date, check_out_date } = req.query;
+      if (!check_in_date && !check_out_date) {
+        const records = await req.model.findAll(RoomFeatureModel);
 
-      // Parse the date strings into Date objects
+        res.status(200).json(records);
+      }
+
       const checkInDate = new Date(check_in_date);
       const checkOutDate = new Date(check_out_date);
 
@@ -84,7 +81,7 @@ async function handleGetAll(req, res, next) {
       const unbookedRooms = await rooms.model.findAll({
         where: {
           Room_id: { [Op.notIn]: bookedRoomIdList },
-        },
+        }, include : [{model:RoomFeatureModel}]
       });
 
 
@@ -249,7 +246,7 @@ async function handleUpdate(req, res, next) {
         previous_payment_date: new Date()
       }]
       const existingPayment = await PaymentModel.findByPk(req.params.id);
-      console.log(...existingPayment.previous_payments,"eeeeeeeeeeeeeee");
+      console.log(existingPayment,"eeeeeeeeeeeeeee");
     const x =  await existingPayment.update({
         amount: existingPayment.amount -req.body.current_payment,
         previous_payments: [...existingPayment.previous_payments, obj]
@@ -259,7 +256,7 @@ async function handleUpdate(req, res, next) {
       let updatedbooking = await model.rooms.update(book.theRoomID, {
         roomStatus: "dirty",
       });
-      res.status(200).json(updatedbooking);
+      res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
 
       let updatedRecord = await req.model.update(req.params.id, req.body);
@@ -313,9 +310,9 @@ async function handleUpdate(req, res, next) {
       }]
       console.log(obj);
       const availableSeat =
-      sumPeopleInTour > 0 ? existingTour.max_amount - sumPeopleInTour : 1;
-  
-    if (sumPeopleInTour <= existingTour.max_amount) {
+      sumPeopleInTour > 0 ? existingTour.max_capacity - sumPeopleInTour : 1;
+      if(req.body.number_of_seats_inTour ){
+    if (sumPeopleInTour <= existingTour.max_capacity) {
       await existingTour.update({
         people_in_tour: newPeopleInTour,
         availableSeat: availableSeat,
@@ -348,14 +345,14 @@ async function handleUpdate(req, res, next) {
 
       } else {
         res.status(400).json({ message: "Exceeded max capacity" });
-      }
+      }}else {
 
-    } 
+    
 
-     else {
+     
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
-    }
+    }}
   } catch (err) {
     next(err);
   }

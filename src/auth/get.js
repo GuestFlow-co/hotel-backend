@@ -26,7 +26,8 @@ module.exports = async (req, res, next) => {
           path === `services/${req.params.id}` ||
           path === `guide/${req.params.id}` ||
           path === `tour/${req.params.id}` ||
-          path === `bookings/${existingBooking.bookings[0].booking_id}`) &&
+          path === `payments/${req.params.id}` ||
+          path === `bookings/${req.params.id}`) &&
         req.user.role.includes("user")
       ) {
         next();

@@ -18,11 +18,11 @@ module.exports = async (req, res, next) => {
     req.token = validUser.token;
 
     console.log(path);
-    // const existingBooking = await models.bookings.findAlls({
-    //   where: {
-    //     customer_id: req.user.user_id
-    //   }
-    // });
+    const existingBooking = await models.bookings.findAlls({
+      where: {
+        customer_id: req.user.user_id
+      }
+    });
     // console.log(req.user.user_id);
     // console.log(existingBooking);
     //        console.log(req.user.role.includes("admin"))
