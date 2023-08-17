@@ -345,14 +345,10 @@ async function handleUpdate(req, res, next) {
 
       } else {
         res.status(400).json({ message: "Exceeded max capacity" });
-      }}else {
-
-    
-
-     
+      }}}else {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
-    }}
+    }
   } catch (err) {
     next(err);
   }
