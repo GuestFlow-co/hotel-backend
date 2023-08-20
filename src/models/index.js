@@ -22,7 +22,7 @@ let sequelizeOptions =
       }
     : {};
 
-const sequelize = new Sequelize(DATABASE_URL);
+const sequelize = new Sequelize(DATABASE_URL,sequelizeOptions);
 
 const users = usersModel(sequelize, DataTypes);
 const ResetToken = require("./RestToken/RestToken")(sequelize, DataTypes);
