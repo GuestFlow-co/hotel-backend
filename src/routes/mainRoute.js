@@ -31,11 +31,11 @@ const router = express.Router();
 
 router.param("model", modelsMiddleware);
 // router.get("/rooms", handleGetunbookedRoom);
-router.get("/:model",getmodel, handleGetAll);
-router.get("/:model/:id",getmodel,handleGetOne);
-router.post("/:model",postmodel, handleCreate);
-router.put("/:model/:id",putmodel, handleUpdate);
-router.delete("/:model/:id", deletemodel,handleDelete);
+router.get("/:model", handleGetAll);
+router.get("/:model/:id",handleGetOne);
+router.post("/:model", handleCreate);
+router.put("/:model/:id", handleUpdate);
+router.delete("/:model/:id",handleDelete);
 
 // async function handleGetunbookedRoom(req,res,next) {
 //   const start = new Date(req.query.startDate)
