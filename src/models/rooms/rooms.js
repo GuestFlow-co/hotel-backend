@@ -40,7 +40,13 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
         allowNull: true,
       },
     roomStatus:{type:DataTypes.STRING,
-        defaultValue:"Available"}
+        defaultValue:"Available"},
+        photoUrl: {
+          type: DataTypes.ARRAY(DataTypes.STRING), 
+        },
+        coverPhoto:{
+          type: DataTypes.STRING,
+      }
 
 })
 module.exports=Rooms

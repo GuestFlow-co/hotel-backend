@@ -34,15 +34,7 @@ const tour = (sequelize, DataTypes) =>
       type: DataTypes.ARRAY(DataTypes.INTEGER), 
       defaultValue: [],
       
-      // type: DataTypes.JSON, // or DataTypes.STRING if you prefer
-      // defaultValue: '[]',   // Initialize with an empty JSON array
-      // get() {
-      //   const rawValue = this.getDataValue('people_in_tour');
-      //   return JSON.parse(rawValue || '[]');
-      // },
-      // set(value) {
-      //   this.setDataValue('people_in_tour', JSON.stringify(value));
-      // },
+     
     },
      max_capacity:{
       type: DataTypes.INTEGER,
@@ -55,18 +47,15 @@ const tour = (sequelize, DataTypes) =>
     tour_customer: {
       type: DataTypes.ARRAY(DataTypes.JSON), 
       defaultValue: [],
-  
-      
-    //   type: DataTypes.JSON, // or DataTypes.STRING if you prefer
-    //   defaultValue: '[]',   // Initialize with an empty JSON array
-    //   get() {
-    //     const rawValue = this.getDataValue('tour_customer');
-    //     return JSON.parse(rawValue || '[]');
-    //   },
-    //   set(value) {
-    //     this.setDataValue('tour_customer', JSON.stringify(value));
-    //   },
     },
+      
+      photoUrl: {
+        type: DataTypes.ARRAY(DataTypes.STRING), 
+      },
+      coverPhoto:{
+        type: DataTypes.STRING,
+    }
+   
   });
 
 module.exports =  tour ;
