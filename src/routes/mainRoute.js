@@ -1,6 +1,7 @@
 "use strict";
 const nodemailer = require("nodemailer");
-
+const cloudinary = require("../middlewares/cloudinary");
+const upload = require("../middlewares/multer");
 const transporter = require("../nodeMailer");
 require("dotenv").config();
 const { Op } = require("sequelize");
@@ -12,9 +13,9 @@ const data = require("../models/index");
 const modelsMiddleware = require("../middlewares/modelsMiddleware");
 const bearer = require("../auth/bearer");
 const getmodel = require("../auth/get");
-const postmodel = require("../auth/post")
-const putmodel =require("../auth/put")
-const deletemodel =require("../auth/delete")
+const postmodel = require("../auth/post");
+const putmodel = require("../auth/put");
+const deletemodel = require("../auth/delete");
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -32,11 +33,10 @@ const router = express.Router();
 
 router.param("model", modelsMiddleware);
 router.get("/:model", handleGetAll);
-router.get("/:model/:id",handleGetOne);
-router.post("/:model", handleCreate);
+router.get("/:model/:id", handleGetOne);
+router.post("/:model", upload.array("image"), handleCreate);
 router.put("/:model/:id", handleUpdate);
-router.delete("/:model/:id",handleDelete);
-
+router.delete("/:model/:id", handleDelete);
 
 async function handleGetAll(req, res, next) {
   try {
@@ -76,15 +76,16 @@ async function handleGetAll(req, res, next) {
         raw: true,
       });
 
-      const bookedRoomIdList = bookedRoomIds.map((booking) => booking.theRoomID);
+      const bookedRoomIdList = bookedRoomIds.map(
+        (booking) => booking.theRoomID
+      );
 
       const unbookedRooms = await rooms.model.findAll({
         where: {
           Room_id: { [Op.notIn]: bookedRoomIdList },
-        }, include : [{model:RoomFeatureModel}]
+        },
+        include: [{ model: RoomFeatureModel }],
       });
-
-
 
       res.status(200).json(unbookedRooms);
     } else if (req.model.modelName == "bookings") {
@@ -109,10 +110,10 @@ async function handleGetAll(req, res, next) {
     } else if (req.model.modelName == "tour") {
       const records = await req.model.findAll(GuideModel);
       res.status(200).json(records);
-    }else if (req.model.modelName == "user") {
+    } else if (req.model.modelName == "user") {
       const records = await req.model.findAll(BookingModel);
-      res.status(200).json(records)} 
-    else {
+      res.status(200).json(records);
+    } else {
       let allRecords = await req.model.get();
       res.status(200).json(allRecords);
     }
@@ -159,9 +160,7 @@ async function handleGetOne(req, res, next) {
 
 async function handleCreate(req, res, next) {
   try {
-  
     if (req.model.modelName === "bookings") {
-
       const bookingPrice = parseInt(req.body.bookingPrice);
       let date_1 = new Date(req.body.check_out_date);
       let date_2 = new Date(req.body.check_in_date);
@@ -177,9 +176,8 @@ async function handleCreate(req, res, next) {
         amount: totalprice,
       });
       req.body.paymentID = paymentObj.payment_id;
-    
 
-let newRecord = await req.model.create(req.body);
+      let newRecord = await req.model.create(req.body);
       //email
       const userInfo = await model.users.get(newRecord.customer_id);
       const roomid = newRecord.theRoomID;
@@ -188,7 +186,7 @@ let newRecord = await req.model.create(req.body);
       });
 
       const mailOptions = {
-        text: `Hello ,\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`, 
+        text: `Hello ,\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`,
         from: process.env.EMAIL,
         to: userInfo.email,
         subject: "Booking Confirmation",
@@ -214,11 +212,33 @@ let newRecord = await req.model.create(req.body);
       const existingPayment = await PaymentModel.findByPk(book.paymentID);
 
       await model.PaymentModel.update(
-        { amount: existingPayment.amount+servicePrice  },
+        { amount: existingPayment.amount + servicePrice },
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
-    } else {
+    } else if (req.model.modelName === "rooms" || "tour") {
+      console.log(req.files);
+      const imageUploadPromises = req.files.map(async (file) => {
+        const result = await cloudinary.uploader.upload(file.path);
+        return result.secure_url;
+      });
+    
+      try {
+        const uploadedImages = await Promise.all(imageUploadPromises);
+    
+        const roomFeatureData = {
+          ...req.body,
+          photoUrl: uploadedImages,
+          coverPhoto:uploadedImages[0]
+        };
+        const newRecord = await req.model.create(roomFeatureData);
+    
+        // Rest of your code...
+    
+        res.status(201).json(newRecord);
+      }catch (error) {
+        next(error);
+      }} else {
       let newRecord = await req.model.create(req.body);
       res.status(201).json(newRecord);
     }
@@ -241,40 +261,41 @@ async function handleUpdate(req, res, next) {
         model.TourModel,
         model.GuideModel
       );
-      const obj=[{
-        previous_payment:req.body.current_payment,
-        previous_payment_date: new Date()
-      }]
+      const obj = [
+        {
+          previous_payment: req.body.current_payment,
+          previous_payment_date: new Date(),
+        },
+      ];
       const existingPayment = await PaymentModel.findByPk(req.params.id);
-      console.log(existingPayment,"eeeeeeeeeeeeeee");
-    const x =  await existingPayment.update({
-        amount: existingPayment.amount -req.body.current_payment,
-        previous_payments: [...existingPayment.previous_payments, obj]
+      console.log(existingPayment, "eeeeeeeeeeeeeee");
+      const x = await existingPayment.update({
+        amount: existingPayment.amount - req.body.current_payment,
+        previous_payments: [...existingPayment.previous_payments, obj],
       });
-      console.log(x,"2222222222222222");
+      console.log(x, "2222222222222222");
 
       let updatedbooking = await model.rooms.update(book.theRoomID, {
         roomStatus: "dirty",
       });
       res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
-
       let updatedRecord = await req.model.update(req.params.id, req.body);
       const existingroom = await RoomModel.findByPk(req.params.id);
       const updatedRates = [
         ...existingroom.rate,
         {
-          userRate: req.body.userRate
-        }
+          userRate: req.body.userRate,
+        },
       ];
-      
+
       await existingroom.update({
-        rate: updatedRates
+        rate: updatedRates,
       });
-      
+
       // req.body.rate.push(req.body.userRate);
-      const ratings = existingroom.rate.map(rate => rate.userRate)
-            console.log(ratings);
+      const ratings = existingroom.rate.map((rate) => rate.userRate);
+      console.log(ratings);
       const totalRatings = ratings.length;
       const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
       const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 5;
@@ -282,11 +303,7 @@ async function handleUpdate(req, res, next) {
       console.log(req.body.theRoomRate);
       const x = await req.model.update(req.params.id, req.body);
       res.status(200).json(x);
-    } 
-    
-    
-    else if (req.model.modelName === "bookings") {
-
+    } else if (req.model.modelName === "bookings") {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       const existingTour = await TourModel.findByPk(updatedRecord.tourId);
       console.log(existingTour);
@@ -297,55 +314,59 @@ async function handleUpdate(req, res, next) {
         ...existingTour.people_in_tour,
         req.body.number_of_seats_inTour,
       ];
-      console.log(req.body.number_of_seats_inTour)
+      console.log(req.body.number_of_seats_inTour);
       const sumPeopleInTour = newPeopleInTour.reduce(
         (sum, value) => sum + value,
         0
       );
-      let customerID = updatedRecord.customer_id
-      let seats =updatedRecord.number_of_seats_inTour
-      const obj=[{
-        customerID:customerID,
-        seats:seats
-      }]
+      let customerID = updatedRecord.customer_id;
+      let seats = updatedRecord.number_of_seats_inTour;
+      const obj = [
+        {
+          customerID: customerID,
+          seats: seats,
+        },
+      ];
       console.log(obj);
       const availableSeat =
-      sumPeopleInTour > 0 ? existingTour.max_capacity - sumPeopleInTour : 1;
-      if(req.body.number_of_seats_inTour ){
-    if (sumPeopleInTour <= existingTour.max_capacity) {
-      await existingTour.update({
-        people_in_tour: newPeopleInTour,
-        availableSeat: availableSeat,
-        tour_customer: [...existingTour.tour_customer, obj]
-      });
-    
-    res.status(200).json(updatedRecord);
+        sumPeopleInTour > 0 ? existingTour.max_capacity - sumPeopleInTour : 1;
+      if (req.body.number_of_seats_inTour) {
+        if (sumPeopleInTour <= existingTour.max_capacity) {
+          await existingTour.update({
+            people_in_tour: newPeopleInTour,
+            availableSeat: availableSeat,
+            tour_customer: [...existingTour.tour_customer, obj],
+          });
 
-  
+          res.status(200).json(updatedRecord);
 
-       const total_tour_price = existingTour.Seat_price * req.body.number_of_seats_inTour
-       
-       const existingBooking = await BookingModel.findByPk(req.params.id);
+          const total_tour_price =
+            existingTour.Seat_price * req.body.number_of_seats_inTour;
 
-      existingBooking.total_tour_price = total_tour_price;
+          const existingBooking = await BookingModel.findByPk(req.params.id);
 
-      await existingBooking.update({
-        total_tour_price:total_tour_price
-      });
+          existingBooking.total_tour_price = total_tour_price;
 
-      const existingPayment = await PaymentModel.findByPk(updatedRecord.paymentID);
-     const total_amount = existingPayment.amount + total_tour_price
+          await existingBooking.update({
+            total_tour_price: total_tour_price,
+          });
 
-      await existingPayment.update({
-        amount:total_amount
-      });
+          const existingPayment = await PaymentModel.findByPk(
+            updatedRecord.paymentID
+          );
+          const total_amount = existingPayment.amount + total_tour_price;
 
-      console.log(existingPayment)
-        res.status(200).json(existingTour);
+          await existingPayment.update({
+            amount: total_amount,
+          });
 
-      } else {
-        res.status(400).json({ message: "Exceeded max capacity" });
-      }}}else {
+          console.log(existingPayment);
+          res.status(200).json(existingTour);
+        } else {
+          res.status(400).json({ message: "Exceeded max capacity" });
+        }
+      }
+    } else {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
     }
