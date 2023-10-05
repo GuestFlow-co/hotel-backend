@@ -19,7 +19,9 @@ router.post(
   this.model === "bookings" ? acl("read") : acl("create"),
   handleCreate
 );
-router.put("/:model/:id", bearer, acl("update"), handleUpdate);
+router.put("/:model/:id",
+//  bearer, acl("update"), 
+ handleUpdate);
 router.delete("/:model/:id", bearer, acl("delete"), handleDelete);
 // router.get("/:model/getAllRooms/:id", handleAllRooms)
 
