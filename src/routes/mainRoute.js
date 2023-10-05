@@ -281,14 +281,17 @@ async function handleUpdate(req, res, next) {
       res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
       let updatedRecord = await req.model.update(req.params.id, req.body);
+      console.log(req.body,"Body")
       const existingroom = await RoomModel.findByPk(req.params.id);
+      const existingRate = existingroom.rate || [];
+
       const updatedRates = [
-        ...existingroom.rate,
+        ...existingRate,
         {
           userRate: req.body.userRate,
         },
       ];
-
+console.log(updatedRates,"upppp")
       await existingroom.update({
         rate: updatedRates,
       });

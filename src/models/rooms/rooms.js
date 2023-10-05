@@ -15,6 +15,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
     allowNull: false,
     unique: true,
   },
+  
   roomType: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -35,6 +36,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
     type: DataTypes.FLOAT,
     allowNull: true,
   },
+  
   roomPrice: {
     type: DataTypes.INTEGER,
     allowNull: true,
