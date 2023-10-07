@@ -38,7 +38,7 @@ router.post("/forgotPassword", async (req, res) => {
         from: "apihoteltest@gmail.com",
         to: user.email,
         subject: "Reset Your Password",
-        text: `Click the following link to reset your password: ${resetToken.token}`,
+        text: `Click the following link to reset your password: http://localhost:3005/resetPassword/${resetToken.token}`,
       });
 
       res.json({ message: "Password reset email sent" });
