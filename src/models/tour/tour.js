@@ -1,3 +1,4 @@
+
 "use strict";
 
 const tour = (sequelize, DataTypes) =>
@@ -74,3 +75,4 @@ const tour = (sequelize, DataTypes) =>
   });
 
 module.exports = tour;
+

@@ -1,3 +1,4 @@
+
 "use strict";
 const nodemailer = require("nodemailer");
 const cloudinary = require("../middlewares/cloudinary");
@@ -161,7 +162,6 @@ async function handleGetOne(req, res, next) {
 async function handleCreate(req, res, next) {
   try {
     if (req.model.modelName === "bookings") {
-      // Handle bookings model
       const bookingPrice = parseInt(req.body.bookingPrice);
       let date_1 = new Date(req.body.check_out_date);
       let date_2 = new Date(req.body.check_in_date);
@@ -179,29 +179,25 @@ async function handleCreate(req, res, next) {
       req.body.paymentID = paymentObj.payment_id;
 
       let newRecord = await req.model.create(req.body);
-
-      // Handle email and room status update (assuming these are asynchronous operations)
+      //email
       const userInfo = await model.users.get(newRecord.customer_id);
       const roomid = newRecord.theRoomID;
       let updatedbooking = await model.rooms.update(roomid, {
         roomStatus: "booked",
       });
 
-      // Send email (assuming you have a working email service)
       const mailOptions = {
         text: `Hello ,\n\nYour booking has been confirmed with the following details:\n\n${newRecord}\n\nThank you!\n\n'Welcome to our Hotel! We can't wait till we meet you ! 😍✨'`,
         from: process.env.EMAIL,
         to: userInfo.email,
         subject: "Booking Confirmation",
       };
+      // Send the email
       const info = await transporter.sendMail(mailOptions);
 
       res.status(201).json(newRecord);
     } else if (req.model.modelName === "bookedServices") {
-      // Handle bookedServices model
       let newRecord = await req.model.create(req.body);
-
-      // Handle updating payment amount (assuming PaymentModel and book.services exist)
       const book = await model.bookings.readOne(
         newRecord.bookings_id,
         model.RoomModel,
@@ -214,52 +210,43 @@ async function handleCreate(req, res, next) {
       const servicePrice = parseInt(
         book.services.reduce((acc, service) => acc + service.cost, 0)
       );
-      const existingPayment = await model.PaymentModel.findByPk(book.paymentID);
+      const existingPayment = await PaymentModel.findByPk(book.paymentID);
 
       await model.PaymentModel.update(
         { amount: existingPayment.amount + servicePrice },
         { where: { payment_id: book.paymentID } }
       );
-
       res.status(201).json(newRecord);
-    } else {
-      // Handle other models
-      if (req.files && req.files.length > 0) {
-        // Handle file uploads if applicable
-        const imageUploadPromises = req.files.map(async (file) => {
-          const result = await cloudinary.uploader.upload(file.path);
-          return result.secure_url;
-        });
-
-        try {
-          const uploadedImages = await Promise.all(imageUploadPromises);
-
-          const modelData = {
-            ...req.body,
-            photoUrl: uploadedImages,
-            coverPhoto: uploadedImages[0],
-          };
-
-          const newRecord = await req.model.create(modelData);
-          res.status(201).json(newRecord);
-        } catch (error) {
-          next(error);
-        }
-      } else {
-        // Handle the case when no files are uploaded
-        try {
-          const newRecord = await req.model.create(req.body);
-          res.status(201).json(newRecord);
-        } catch (error) {
-          next(error);
-        }
-      }
+    } else if (req.model.modelName === "rooms" || "tour") {
+      console.log(req.files);
+      const imageUploadPromises = req.files.map(async (file) => {
+        const result = await cloudinary.uploader.upload(file.path);
+        return result.secure_url;
+      });
+    
+      try {
+        const uploadedImages = await Promise.all(imageUploadPromises);
+    
+        const roomFeatureData = {
+          ...req.body,
+          photoUrl: uploadedImages,
+          coverPhoto:uploadedImages[0]
+        };
+        const newRecord = await req.model.create(roomFeatureData);
+    
+        // Rest of your code...
+    
+        res.status(201).json(newRecord);
+      }catch (error) {
+        next(error);
+      }} else {
+      let newRecord = await req.model.create(req.body);
+      res.status(201).json(newRecord);
     }
   } catch (err) {
     next(err);
   }
 }
-
 
 async function handleUpdate(req, res, next) {
   try {
@@ -294,10 +281,9 @@ async function handleUpdate(req, res, next) {
       });
       res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
-      console.log(req.model.modelName);
-      // let updatedRecord = await req.model.update(req.params.id, req.body);
+      let updatedRecord = await req.model.update(req.params.id, req.body);
+      console.log(req.body,"Body")
       const existingroom = await RoomModel.findByPk(req.params.id);
-      console.log(existingroom,"existingroom");
       const existingRate = existingroom.rate || [];
 
       const updatedRates = [
@@ -306,7 +292,7 @@ async function handleUpdate(req, res, next) {
           userRate: req.body.userRate,
         },
       ];
-console.log(updatedRates,"updatedRates");
+console.log(updatedRates,"upppp")
       await existingroom.update({
         rate: updatedRates,
       });
@@ -403,3 +389,4 @@ async function handleDelete(req, res, next) {
 }
 
 module.exports = router;
+
