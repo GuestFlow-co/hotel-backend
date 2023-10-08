@@ -38,7 +38,7 @@ router.post("/forgotPassword", async (req, res) => {
         from: "apihoteltest@gmail.com",
         to: user.email,
         subject: "Reset Your Password",
-        text: `Click the following link to reset your password: http://localhost:3005/resetPassword/${resetToken.token}`,
+        text: `Click the following link to reset your password:<a href=${`http://localhost:3000/resetPassword/${resetToken.token}`}>here</a>`,
       });
 
       res.json({ message: "Password reset email sent" });
@@ -71,7 +71,7 @@ router.post("/resetPassword/:token", resetTokenValidator, async (req, res) => {
 
       // Delete the used reset token
       await resetToken.destroy();
-
+   console.log(user,"userrrrrrrrrr")
       res.json({ message: "Password reset successful" });
     } else {
       res.status(404).json({ error: "User not found" });
