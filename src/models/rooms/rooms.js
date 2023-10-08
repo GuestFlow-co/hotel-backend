@@ -1,4 +1,8 @@
+
 'use srtict'
+
+
+
 
 const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
   Room_id: {
@@ -57,3 +61,4 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
 
 })
 module.exports = Rooms
+
