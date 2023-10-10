@@ -98,6 +98,10 @@ async function handleGetAll(req, res, next) {
         model.TourModel
       );
       res.status(200).json(record);
+    }else if   (req.model.modelName === "theTourCommnet"){
+      const records = await req.model.findAll(TourModel);
+      res.status(200).json(records);
+
     } else if (req.model.modelName == "rooms") {
       const records = await req.model.findAll(RoomFeatureModel);
       res.status(200).json(records);
@@ -249,6 +253,7 @@ async function handleCreate(req, res, next) {
         // Handle the case when no files are uploaded
         try {
           const newRecord = await req.model.create(req.body);
+          console.log(newRecord,"asdasdasd");
           res.status(201).json(newRecord);
         } catch (error) {
           next(error);
