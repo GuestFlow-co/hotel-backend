@@ -255,7 +255,7 @@ async function handleCreate(req, res, next) {
           next(error);
         }
       }
-
+    }
    
   } catch (err) {
     next(err);
