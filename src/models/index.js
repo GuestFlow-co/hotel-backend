@@ -5,9 +5,17 @@ const { Sequelize, DataTypes } = require("sequelize");
 const DataCollection = require("./collection");
 const usersModel = require("./users");
 
-const DATABASE_URL = process.env.DATABASE_URL || "sqlite:memory:";
+const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory' : process.env.DATABASE_URL;
 
-const sequelize = new Sequelize(DATABASE_URL);
+const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    }
+  }
+} : {};
+const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
 
 const users = usersModel(sequelize, DataTypes);
 const ResetToken = require("./RestToken/RestToken")(sequelize, DataTypes);
