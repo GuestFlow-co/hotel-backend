@@ -57,7 +57,17 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
   },
   description: {
     type: DataTypes.STRING,
-  }
+  },
+  bed_nums:{
+    type: DataTypes.INTEGER,
+  },
+  Room_space:{
+    type: DataTypes.STRING,
+  },
+  Room_view:{
+    type: DataTypes.STRING,
+  },
+
 
 })
 module.exports = Rooms
