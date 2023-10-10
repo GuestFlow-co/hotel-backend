@@ -43,9 +43,13 @@ const EmployeeRoleAssignmentModel =
 const CustomerModel = require("./users")(sequelize, DataTypes);
 const TourModel = require("./tour/tour")(sequelize, DataTypes);
 const GuideModel = require("./guide/guide")(sequelize, DataTypes);
+const tourCommnet = require("./tour/tourCommnet")(sequelize, DataTypes);
 
 GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
 BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
+
+TourModel.hasMany(tourCommnet, { foreignKey: "commnet_id" });
+tourCommnet.belongsTo(TourModel, { foreignKey: "commnet_id" });
 
 GuideModel.hasMany(TourModel, { foreignKey: "guideId" });
 TourModel.belongsTo(GuideModel, { foreignKey: "guideId" });
@@ -114,6 +118,8 @@ module.exports = {
   user: new DataCollection(CustomerModel),
   guide: new DataCollection(GuideModel),
   tour: new DataCollection(TourModel),
+  theTourCommnet:new DataCollection(tourCommnet),
+  tourCommnet,
   GuideModel,
   TourModel,
   CustomerModel,

@@ -12,7 +12,7 @@ const tour = (sequelize, DataTypes) =>
       unique: true,
     },
     description: {
-      type: DataTypes.STRING(1012), // Increase the maximum length to 1012 characters
+      type: DataTypes.STRING(1012), 
       allowNull: true,
     },
     start_date: {
@@ -59,6 +59,7 @@ const tour = (sequelize, DataTypes) =>
     Title: {
       type: DataTypes.STRING(1012), // Increase the maximum length to 1012 characters
     },
+   
     Rating: {
       type: DataTypes.INTEGER,
     },
