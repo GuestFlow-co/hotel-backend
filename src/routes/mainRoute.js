@@ -99,6 +99,10 @@ async function handleGetAll(req, res, next) {
         model.TourModel
       );
       res.status(200).json(record);
+    }else if   (req.model.modelName === "theTourCommnet"){
+      const records = await req.model.findAll(TourModel);
+      res.status(200).json(records);
+
     } else if (req.model.modelName == "rooms") {
       const records = await req.model.findAll(RoomFeatureModel);
       res.status(200).json(records);
@@ -217,32 +221,42 @@ async function handleCreate(req, res, next) {
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
+
     } else if (req.model.modelName === "rooms" || "tour") {
-      console.log(req.files);
-      const imageUploadPromises = req.files.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path);
-        return result.secure_url;
-      });
-    
-      try {
-        const uploadedImages = await Promise.all(imageUploadPromises);
-    
-        const roomFeatureData = {
-          ...req.body,
-          photoUrl: uploadedImages,
-          coverPhoto:uploadedImages[0]
-        };
-        const newRecord = await req.model.create(roomFeatureData);
-    
-        // Rest of your code...
-    
-        res.status(201).json(newRecord);
-      }catch (error) {
-        next(error);
-      }} else {
-      let newRecord = await req.model.create(req.body);
-      res.status(201).json(newRecord);
+      // Handle other models
+      if (req.files && req.files.length > 0) {
+        // Handle file uploads if applicable
+        const imageUploadPromises = req.files.map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path);
+          return result.secure_url;
+        });
+
+        try {
+          const uploadedImages = await Promise.all(imageUploadPromises);
+
+          const modelData = {
+            ...req.body,
+            photoUrl: uploadedImages,
+            coverPhoto: uploadedImages[0],
+          };
+
+          const newRecord = await req.model.create(modelData);
+          res.status(201).json(newRecord);
+        } catch (error) {
+          next(error);
+        }
+      } else {
+        // Handle the case when no files are uploaded
+        try {
+          const newRecord = await req.model.create(req.body);
+          console.log(newRecord,"asdasdasd");
+          res.status(201).json(newRecord);
+        } catch (error) {
+          next(error);
+        }
+      }
     }
+   
   } catch (err) {
     next(err);
   }
