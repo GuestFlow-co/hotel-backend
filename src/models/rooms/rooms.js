@@ -56,7 +56,7 @@ const Rooms = (sequelize, DataTypes) => sequelize.define('Room', {
     type: DataTypes.STRING,
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   bed_nums:{
     type: DataTypes.INTEGER,
