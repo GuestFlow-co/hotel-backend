@@ -17,4 +17,3 @@ const room_features = (sequelize, DataTypes) =>
     },
   });
 module.exports = room_features;
-
