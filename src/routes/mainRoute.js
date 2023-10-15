@@ -222,7 +222,7 @@ async function handleCreate(req, res, next) {
       );
       res.status(201).json(newRecord);
 
-    } else if (req.model.modelName === "rooms" || "tour") {
+    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
       // Handle other models
       if (req.files && req.files.length > 0) {
         // Handle file uploads if applicable
