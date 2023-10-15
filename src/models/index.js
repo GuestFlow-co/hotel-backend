@@ -28,6 +28,8 @@ const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
 const RoomsFeatures = require("./RoomsFeatures")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
+const ResturantsModel = require("./resturant/food")(sequelize, DataTypes);
+
 
 const RoomTypeFeatureModel = require("./rooms/room_type_features")(
   sequelize,
@@ -119,6 +121,7 @@ module.exports = {
   guide: new DataCollection(GuideModel),
   tour: new DataCollection(TourModel),
   theTourCommnet:new DataCollection(tourCommnet),
+  Resturants:new DataCollection(ResturantsModel),
   tourCommnet,
   GuideModel,
   TourModel,
@@ -132,4 +135,5 @@ module.exports = {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeRoleAssignmentModel,
+  ResturantsModel
 };
