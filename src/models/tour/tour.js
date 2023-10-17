@@ -1,4 +1,3 @@
-
 "use strict";
 
 const tour = (sequelize, DataTypes) =>
@@ -12,7 +11,7 @@ const tour = (sequelize, DataTypes) =>
       unique: true,
     },
     description: {
-      type: DataTypes.STRING(1012), 
+      type: DataTypes.STRING(1012),
       allowNull: true,
     },
     start_date: {
@@ -59,21 +58,28 @@ const tour = (sequelize, DataTypes) =>
     Title: {
       type: DataTypes.STRING(1012), // Increase the maximum length to 1012 characters
     },
-   
     Rating: {
       type: DataTypes.INTEGER,
     },
     TourPlan: {
-      type: DataTypes.JSON,
-      defaultValue: {},
+      type: DataTypes.TEXT, // Use TEXT to store JSON as a string
+      defaultValue: JSON.stringify({
+        description: "",
+        days: [],
+      }),
       get() {
-        return JSON.parse(this.getDataValue('TourPlan'));
+        const rawValue = this.getDataValue('TourPlan');
+        try {
+          return JSON.parse(rawValue);
+        } catch (error) {
+          return JSON.parse(this.getDataValue('TourPlan'));
+        }
       },
       set(value) {
+        // Ensure the value is stored as a JSON string
         this.setDataValue('TourPlan', JSON.stringify(value));
       },
     },
   });
 
 module.exports = tour;
-

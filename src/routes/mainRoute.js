@@ -223,9 +223,19 @@ async function handleCreate(req, res, next) {
       res.status(201).json(newRecord);
 
     } else if (req.model.modelName === "rooms" || "tour") {
-      // Handle other models
+      console.log("reeaaaaaaaaaaa",req.body );
+
       if (req.files && req.files.length > 0) {
-        // Handle file uploads if applicable
+        console.log("reeqqqqqqqqqqq",req.body );
+     if( req.body.Seat_price)  req.body.Seat_price= parseInt(req.body.Seat_price)
+     if( req.body.max_capacity)  req.body.max_capacity= parseInt(req.body.max_capacity)
+     if( req.body.Rating)  req.body.Rating= parseInt(req.body.Rating)
+        console.log("befor", req.body);
+
+        if( req.body.TourPlan)   req.body.TourPlan = JSON.parse(req.body.TourPlan);
+        console.log("after", req.body);
+// console.log(typeof  req.body.end_date  );
+
         const imageUploadPromises = req.files.map(async (file) => {
           const result = await cloudinary.uploader.upload(file.path);
           return result.secure_url;
@@ -238,20 +248,27 @@ async function handleCreate(req, res, next) {
             ...req.body,
             photoUrl: uploadedImages,
             coverPhoto: uploadedImages[0],
+            // TourPlan:req.body.tourPlan
           };
 
           const newRecord = await req.model.create(modelData);
           res.status(201).json(newRecord);
         } catch (error) {
+          console.log("error",error);
           next(error);
         }
       } else {
         // Handle the case when no files are uploaded
         try {
+          req.body.Seat_price= parseInt(req.body.Seat_price)
+       req.body.max_capacity= parseInt(req.body.max_capacity)
+        req.body.Rating= parseInt(req.body.Rating)
           const newRecord = await req.model.create(req.body);
           console.log(newRecord,"asdasdasd");
           res.status(201).json(newRecord);
         } catch (error) {
+          console.log("error",error);
+
           next(error);
         }
       }
