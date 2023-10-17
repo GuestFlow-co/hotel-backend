@@ -1,4 +1,3 @@
-
 "use strict";
 const nodemailer = require("nodemailer");
 const cloudinary = require("../middlewares/cloudinary");
@@ -99,10 +98,9 @@ async function handleGetAll(req, res, next) {
         model.TourModel
       );
       res.status(200).json(record);
-    }else if   (req.model.modelName === "theTourCommnet"){
+    } else if (req.model.modelName === "theTourCommnet") {
       const records = await req.model.findAll(TourModel);
       res.status(200).json(records);
-
     } else if (req.model.modelName == "rooms") {
       const records = await req.model.findAll(RoomFeatureModel);
       res.status(200).json(records);
@@ -221,62 +219,67 @@ async function handleCreate(req, res, next) {
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
-
-
-    }  else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
- 
+    } else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
       if (req.files && req.files.length > 0) {
-        console.log("reeqqqqqqqqqqq",req.body );
-     if( req.body.Seat_price)  req.body.Seat_price= parseInt(req.body.Seat_price)
-     if( req.body.max_capacity)  req.body.max_capacity= parseInt(req.body.max_capacity)
-     if( req.body.Rating)  req.body.Rating= parseInt(req.body.Rating)
-        console.log("befor", req.body);
-
-        if( req.body.TourPlan)   req.body.TourPlan = JSON.parse(req.body.TourPlan);
-        console.log("after", req.body);
-// console.log(typeof  req.body.end_date  );
-
+        if (req.body.Seat_price)
+          req.body.Seat_price = parseInt(req.body.Seat_price);
+        if (req.body.max_capacity)
+          req.body.max_capacity = parseInt(req.body.max_capacity);
+        
+        if (req.body.Rating) 
+          req.body.Rating = parseInt(req.body.Rating);
+    
+        if (req.body.TourPlan)
+          req.body.TourPlan = JSON.parse(req.body.TourPlan);
+    
         const imageUploadPromises = req.files.map(async (file) => {
           const result = await cloudinary.uploader.upload(file.path);
           return result.secure_url;
         });
-
+    
         try {
           const uploadedImages = await Promise.all(imageUploadPromises);
-
+    
           const modelData = {
             ...req.body,
             photoUrl: uploadedImages,
             coverPhoto: uploadedImages[0],
-            // TourPlan:req.body.tourPlan
+            availableSeat : req.body.max_capacity
           };
-
+    
           const newRecord = await req.model.create(modelData);
           res.status(201).json(newRecord);
         } catch (error) {
-          console.log("error",error);
+          console.log("error", error);
           next(error);
         }
       } else {
         // Handle the case when no files are uploaded
         try {
-          if( req.body.Seat_price)  req.body.Seat_price= parseInt(req.body.Seat_price)
-          if( req.body.max_capacity)  req.body.max_capacity= parseInt(req.body.max_capacity)
-          if( req.body.Rating)  req.body.Rating= parseInt(req.body.Rating)
-             console.log("befor", req.body);
-     
-             if( req.body.TourPlan)   req.body.TourPlan = JSON.parse(req.body.TourPlan);
+          if (req.body.Seat_price)
+            req.body.Seat_price = parseInt(req.body.Seat_price);
+          if (req.body.max_capacity)
+            req.body.max_capacity = parseInt(req.body.max_capacity);
+          
+          if (req.body.Rating) 
+            req.body.Rating = parseInt(req.body.Rating);
+    
+          if (req.body.TourPlan)
+            req.body.TourPlan = JSON.parse(req.body.TourPlan);
+    
           const newRecord = await req.model.create(req.body);
-          console.log(newRecord,"asdasdasd");
+          console.log(newRecord, "asdasdasd");
           res.status(201).json(newRecord);
         } catch (error) {
-          console.log("error",error);
-
+          console.log("error", error);
           next(error);
         }
       }
+    }else {
+      let updatedRecord = await req.model.create( req.body);
+      res.status(201).json(updatedRecord);
     }
-   
+    
   } catch (err) {
     next(err);
   }
@@ -316,7 +319,7 @@ async function handleUpdate(req, res, next) {
       res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
       let updatedRecord = await req.model.update(req.params.id, req.body);
-      console.log(req.body,"Body")
+      console.log(req.body, "Body");
       const existingroom = await RoomModel.findByPk(req.params.id);
       const existingRate = existingroom.rate || [];
 
@@ -326,7 +329,7 @@ async function handleUpdate(req, res, next) {
           userRate: req.body.userRate,
         },
       ];
-console.log(updatedRates,"upppp")
+      console.log(updatedRates, "upppp");
       await existingroom.update({
         rate: updatedRates,
       });
@@ -423,4 +426,3 @@ async function handleDelete(req, res, next) {
 }
 
 module.exports = router;
-
