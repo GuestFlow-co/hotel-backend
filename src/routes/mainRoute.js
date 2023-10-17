@@ -222,9 +222,13 @@ async function handleCreate(req, res, next) {
       );
       res.status(201).json(newRecord);
 
+
     } else if (req.model.modelName === "rooms" || "tour") {
       console.log("reeaaaaaaaaaaa",req.body );
 
+
+    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
+ 
       if (req.files && req.files.length > 0) {
         console.log("reeqqqqqqqqqqq",req.body );
      if( req.body.Seat_price)  req.body.Seat_price= parseInt(req.body.Seat_price)

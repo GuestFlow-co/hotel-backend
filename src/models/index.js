@@ -28,6 +28,8 @@ const BookedServiceModel = require("./Booked_Services")(sequelize, DataTypes);
 const RoomsFeatures = require("./RoomsFeatures")(sequelize, DataTypes);
 const RoomTypeModel = require("./rooms/room_types")(sequelize, DataTypes);
 const RoomFeatureModel = require("./rooms/room_Features")(sequelize, DataTypes);
+const ResturantsModel = require("./resturant/food")(sequelize, DataTypes);
+
 
 const RoomTypeFeatureModel = require("./rooms/room_type_features")(
   sequelize,
@@ -44,9 +46,13 @@ const CustomerModel = require("./users")(sequelize, DataTypes);
 const TourModel = require("./tour/tour")(sequelize, DataTypes);
 const GuideModel = require("./guide/guide")(sequelize, DataTypes);
 const tourCommnet = require("./tour/tourCommnet")(sequelize, DataTypes);
+const CommentRoom = require("./rooms/roomCommnet")(sequelize, DataTypes);
 
 GuideModel.hasMany(BookingModel, { foreignKey: "guide_id" });
 BookingModel.belongsTo(GuideModel, { foreignKey: "guide_id" });
+
+RoomModel.hasMany(CommentRoom, { foreignKey: "commnet_id" });
+CommentRoom.belongsTo(RoomModel, { foreignKey: "commnet_id" });
 
 TourModel.hasMany(tourCommnet, { foreignKey: "commnet_id" });
 tourCommnet.belongsTo(TourModel, { foreignKey: "commnet_id" });
@@ -119,7 +125,10 @@ module.exports = {
   guide: new DataCollection(GuideModel),
   tour: new DataCollection(TourModel),
   theTourCommnet:new DataCollection(tourCommnet),
+  Resturants:new DataCollection(ResturantsModel),
+  commentRoom:new DataCollection(CommentRoom),
   tourCommnet,
+  CommentRoom,
   GuideModel,
   TourModel,
   CustomerModel,
@@ -132,4 +141,5 @@ module.exports = {
   RoomFeatureModel,
   EmployeeRoleModel,
   EmployeeRoleAssignmentModel,
+  ResturantsModel
 };

@@ -31,7 +31,7 @@ authRouter.post("/signup", async (req, res, next) => {
     await userRecord.save();
 
     // Compose the verification email
-    const verificationLink = `http://guestflow.onrender.com/verify?token=${verificationToken}`;
+    const verificationLink = `http://localhost:${process.env.PORT}/verify?token=${verificationToken}`;
     const mailOptions = {
       from: process.env.EMAIL,
       to: userRecord.email,
