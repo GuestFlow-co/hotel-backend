@@ -223,11 +223,7 @@ async function handleCreate(req, res, next) {
       res.status(201).json(newRecord);
 
 
-    } else if (req.model.modelName === "rooms" || "tour") {
-      console.log("reeaaaaaaaaaaa",req.body );
-
-
-    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
+    }  else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
  
       if (req.files && req.files.length > 0) {
         console.log("reeqqqqqqqqqqq",req.body );
@@ -264,9 +260,12 @@ async function handleCreate(req, res, next) {
       } else {
         // Handle the case when no files are uploaded
         try {
-          req.body.Seat_price= parseInt(req.body.Seat_price)
-       req.body.max_capacity= parseInt(req.body.max_capacity)
-        req.body.Rating= parseInt(req.body.Rating)
+          if( req.body.Seat_price)  req.body.Seat_price= parseInt(req.body.Seat_price)
+          if( req.body.max_capacity)  req.body.max_capacity= parseInt(req.body.max_capacity)
+          if( req.body.Rating)  req.body.Rating= parseInt(req.body.Rating)
+             console.log("befor", req.body);
+     
+             if( req.body.TourPlan)   req.body.TourPlan = JSON.parse(req.body.TourPlan);
           const newRecord = await req.model.create(req.body);
           console.log(newRecord,"asdasdasd");
           res.status(201).json(newRecord);
