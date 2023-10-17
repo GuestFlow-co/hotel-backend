@@ -233,7 +233,7 @@ async function handleCreate(req, res, next) {
 
         try {
           const uploadedImages = await Promise.all(imageUploadPromises);
-          
+
           const modelData = {
             ...req.body,
             photoUrl: uploadedImages,
@@ -276,12 +276,12 @@ async function handleUpdate(req, res, next) {
         model.TourModel,
         model.GuideModel
       );
-      const obj =
+      const obj = [
         {
           previous_payment: req.body.current_payment,
           previous_payment_date: new Date(),
-        }
-      
+        },
+      ];
       const existingPayment = await PaymentModel.findByPk(req.params.id);
       console.log(existingPayment, "eeeeeeeeeeeeeee");
       const x = await existingPayment.update({
