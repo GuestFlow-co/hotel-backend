@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     feature_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
   });
