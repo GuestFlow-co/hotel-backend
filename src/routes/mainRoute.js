@@ -16,6 +16,7 @@ const getmodel = require("../auth/get");
 const postmodel = require("../auth/post");
 const putmodel = require("../auth/put");
 const deletemodel = require("../auth/delete");
+
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -219,6 +220,7 @@ async function handleCreate(req, res, next) {
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
+
     } else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
       if (req.files && req.files.length > 0) {
         // console.log("req body", typeof req.body.TourPlan);
