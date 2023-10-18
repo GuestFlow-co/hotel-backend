@@ -17,6 +17,7 @@ const getmodel = require("../auth/get");
 const postmodel = require("../auth/post");
 const putmodel = require("../auth/put");
 const deletemodel = require("../auth/delete");
+
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -222,7 +223,7 @@ async function handleCreate(req, res, next) {
       );
       res.status(201).json(newRecord);
 
-    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {
+    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {  // || "user"
       // Handle other models
       if (req.files && req.files.length > 0) {
         // Handle file uploads if applicable
