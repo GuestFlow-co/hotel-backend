@@ -1,4 +1,3 @@
-
 "use strict";
 const nodemailer = require("nodemailer");
 const cloudinary = require("../middlewares/cloudinary");
@@ -100,10 +99,9 @@ async function handleGetAll(req, res, next) {
         model.TourModel
       );
       res.status(200).json(record);
-    }else if   (req.model.modelName === "theTourCommnet"){
+    } else if (req.model.modelName === "theTourCommnet") {
       const records = await req.model.findAll(TourModel);
       res.status(200).json(records);
-
     } else if (req.model.modelName == "rooms") {
       const records = await req.model.findAll(RoomFeatureModel);
       res.status(200).json(records);
@@ -223,41 +221,68 @@ async function handleCreate(req, res, next) {
       );
       res.status(201).json(newRecord);
 
-    } else if (req.model.modelName === "rooms" || "tour" || "Resturants") {  // || "user"
-      // Handle other models
+    } else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
       if (req.files && req.files.length > 0) {
-        // Handle file uploads if applicable
+        // console.log("req body", typeof req.body.TourPlan);
+        if (req.body.Seat_price)
+          req.body.Seat_price = parseInt(req.body.Seat_price);
+        if (req.body.max_capacity)
+          req.body.max_capacity = parseInt(req.body.max_capacity);
+        
+        if (req.body.Rating) 
+          req.body.Rating = parseInt(req.body.Rating);
+    
+        if (req.body.TourPlan)
+          req.body.TourPlan = JSON.parse(req.body.TourPlan);
+    
         const imageUploadPromises = req.files.map(async (file) => {
           const result = await cloudinary.uploader.upload(file.path);
           return result.secure_url;
         });
-
+    
         try {
           const uploadedImages = await Promise.all(imageUploadPromises);
-          
+    
           const modelData = {
             ...req.body,
             photoUrl: uploadedImages,
             coverPhoto: uploadedImages[0],
+            availableSeat : req.body.max_capacity
           };
-
+    
           const newRecord = await req.model.create(modelData);
           res.status(201).json(newRecord);
         } catch (error) {
+          console.log("error", error);
           next(error);
         }
       } else {
         // Handle the case when no files are uploaded
         try {
+          if (req.body.Seat_price)
+            req.body.Seat_price = parseInt(req.body.Seat_price);
+          if (req.body.max_capacity)
+            req.body.max_capacity = parseInt(req.body.max_capacity);
+          
+          if (req.body.Rating) 
+            req.body.Rating = parseInt(req.body.Rating);
+    
+          if (req.body.TourPlan)
+            req.body.TourPlan = JSON.parse(req.body.TourPlan);
+    
           const newRecord = await req.model.create(req.body);
-          console.log(newRecord,"asdasdasd");
+          console.log(newRecord, "asdasdasd");
           res.status(201).json(newRecord);
         } catch (error) {
+          console.log("error", error);
           next(error);
         }
       }
+    }else {
+      let updatedRecord = await req.model.create( req.body);
+      res.status(201).json(updatedRecord);
     }
-   
+    
   } catch (err) {
     next(err);
   }
@@ -277,12 +302,12 @@ async function handleUpdate(req, res, next) {
         model.TourModel,
         model.GuideModel
       );
-      const obj =
+      const obj = [
         {
           previous_payment: req.body.current_payment,
           previous_payment_date: new Date(),
-        }
-      
+        },
+      ];
       const existingPayment = await PaymentModel.findByPk(req.params.id);
       console.log(existingPayment, "eeeeeeeeeeeeeee");
       const x = await existingPayment.update({
@@ -297,7 +322,7 @@ async function handleUpdate(req, res, next) {
       res.status(200).json(existingPayment);
     } else if (req.model.modelName === "rooms") {
       let updatedRecord = await req.model.update(req.params.id, req.body);
-      console.log(req.body,"Body")
+      console.log(req.body, "Body");
       const existingroom = await RoomModel.findByPk(req.params.id);
       const existingRate = existingroom.rate || [];
 
@@ -307,7 +332,7 @@ async function handleUpdate(req, res, next) {
           userRate: req.body.userRate,
         },
       ];
-console.log(updatedRates,"upppp")
+      console.log(updatedRates, "upppp");
       await existingroom.update({
         rate: updatedRates,
       });
@@ -385,7 +410,81 @@ console.log(updatedRates,"upppp")
           res.status(400).json({ message: "Exceeded max capacity" });
         }
       }
-    } else {
+    }else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
+      // console.log("out '[object Object]':",req.body);
+      // console.log("Inside '[object Object]':",typeof (req.body.TourPlan[1]));
+      // console.log("0000", req.body.TourPlan);
+
+      if (req.files && req.files.length > 0) {
+        if (req.body.Seat_price)
+          req.body.Seat_price = parseInt(req.body.Seat_price);
+          // console.log("after1:",req.body);
+
+        if (req.body.max_capacity)
+          req.body.max_capacity = parseInt(req.body.max_capacity);
+          // console.log("after2:",req.body);
+
+        if (req.body.Rating) 
+          req.body.Rating = parseInt(req.body.Rating);
+          // console.log("after3:",req.body);
+
+        if (req.body.TourPlan)
+          req.body.TourPlan =  JSON.parse(req.body.TourPlan[1])
+          console.log("after4:",req.files);
+
+        const imageUploadPromises = req.files.map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path);
+          return result.secure_url;
+        });
+    
+        try {
+          const uploadedImages = await Promise.all(imageUploadPromises);
+          console.log(uploadedImages,"uploadedImages");
+          const modelData = {
+            ...req.body,
+            photoUrl: uploadedImages,
+            coverPhoto: uploadedImages[0],
+            availableSeat : req.body.max_capacity,
+          };
+          // TourPlan: '{"description":"bbb","days":[{"day":"bb","content":"aa"}]}',
+          // TourPlan: '{"description":"cc","days":[{"day":"ccc","content":"cccc"}]}'
+          console.log(modelData,"modelData");
+           console.log( typeof req.body.Tour_id,"modelData",req.body.Tour_id);
+          const newRecord = await req.model.update(parseInt(req.body.Tour_id),modelData);
+          res.status(201).json(newRecord);
+        } catch (error) {
+          console.log("error", error);
+          next(error);
+        }
+      } else {
+        // Handle the case when no files are uploaded
+        try {
+          if (req.body.Seat_price)
+            req.body.Seat_price = parseInt(req.body.Seat_price);
+          if (req.body.max_capacity)
+            req.body.max_capacity = parseInt(req.body.max_capacity);
+          
+          if (req.body.Rating) 
+            req.body.Rating = parseInt(req.body.Rating);
+            if (req.body.TourPlan){
+
+              req.body.TourPlan = JSON.parse(req.body.TourPlan);
+            }
+            console.log(req.body,"req.body");
+          req.body.tour_id = parseInt(req.body.tour_id);
+
+        console.log(req.body.tour_id,"req.body.Tour_id");
+          const newRecord = await req.model.update(req.body.tour_id,req.body);
+          console.log(newRecord, "asdasdasd");
+          res.status(201).json(newRecord);
+        } catch (error) {
+          console.log("error", error);
+          next(error);
+        }
+      }
+    }
+    else {
+      console.log("reqbody",req.body);
       let updatedRecord = await req.model.update(req.params.id, req.body);
       res.status(200).json(updatedRecord);
     }
@@ -404,4 +503,3 @@ async function handleDelete(req, res, next) {
 }
 
 module.exports = router;
-
