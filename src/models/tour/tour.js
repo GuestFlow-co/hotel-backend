@@ -2,12 +2,12 @@
 
 const tour = (sequelize, DataTypes) =>
   sequelize.define("Tour", {
-    Tour_id: {
+    tour_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      field: 'tour_id',
+      // field: 'tour_id',
       unique: true,
     },
     description: {
@@ -78,6 +78,8 @@ const tour = (sequelize, DataTypes) =>
       set(value) {
         // Ensure the value is stored as a JSON string
         this.setDataValue('TourPlan', JSON.stringify(value));
+        return value;
+
       },
     },
   });
