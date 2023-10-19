@@ -104,6 +104,7 @@ authRouter.post("/signin", basicAuth, async (req, res, next) => {
           phoneNumber: user.phoneNumber,
           username: user.username,
           role: user.role,
+          coverPhoto: user.coverPhoto,
           updatedAt: user.updatedAt,
           createdAt: user.createdAt,
         },
