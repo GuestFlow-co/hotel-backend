@@ -441,6 +441,7 @@ async function handleUpdate(req, res, next) {
         try {
           const uploadedImages = await Promise.all(imageUploadPromises);
           console.log(uploadedImages,"uploadedImages");
+
           if(req.model.modelName==="user"){
             const modelData = {
               ...req.body,
