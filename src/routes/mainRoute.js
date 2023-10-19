@@ -448,7 +448,7 @@ async function handleUpdate(req, res, next) {
           // TourPlan: '{"description":"cc","days":[{"day":"ccc","content":"cccc"}]}'
           console.log(modelData,"modelData");
            console.log( typeof req.body.Tour_id,"modelData",req.body.Tour_id);
-          const newRecord = await req.model.update(parseInt(req.body.Tour_id),modelData);
+          const newRecord = await req.model.update(req.params.id,modelData);
           res.status(201).json(newRecord);
         } catch (error) {
           console.log("error", error);
