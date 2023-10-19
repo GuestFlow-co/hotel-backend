@@ -16,6 +16,7 @@ const getmodel = require("../auth/get");
 const postmodel = require("../auth/post");
 const putmodel = require("../auth/put");
 const deletemodel = require("../auth/delete");
+
 const {
   RoomFeatureModel,
   EmployeeRoleModel,
@@ -35,7 +36,7 @@ router.param("model", modelsMiddleware);
 router.get("/:model", handleGetAll);
 router.get("/:model/:id", handleGetOne);
 router.post("/:model", upload.array("image"), handleCreate);
-router.put("/:model/:id", handleUpdate);
+router.put("/:model/:id", upload.array("image"), handleUpdate);
 router.delete("/:model/:id", handleDelete);
 
 async function handleGetAll(req, res, next) {
@@ -219,6 +220,7 @@ async function handleCreate(req, res, next) {
         { where: { payment_id: book.paymentID } }
       );
       res.status(201).json(newRecord);
+
     } else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
       if (req.files && req.files.length > 0) {
         // console.log("req body", typeof req.body.TourPlan);
@@ -408,11 +410,12 @@ async function handleUpdate(req, res, next) {
           res.status(400).json({ message: "Exceeded max capacity" });
         }
       }
-    }else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants") {
+    }else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants" || req.model.modelName === "user") {
       // console.log("out '[object Object]':",req.body);
       // console.log("Inside '[object Object]':",typeof (req.body.TourPlan[1]));
       // console.log("0000", req.body.TourPlan);
-
+         console.log("req.filessssssssssssss",req.files)
+         console.log("req.fileeeeeeeeeeee",req.file)
       if (req.files && req.files.length > 0) {
         if (req.body.Seat_price)
           req.body.Seat_price = parseInt(req.body.Seat_price);
@@ -438,24 +441,34 @@ async function handleUpdate(req, res, next) {
         try {
           const uploadedImages = await Promise.all(imageUploadPromises);
           console.log(uploadedImages,"uploadedImages");
-          const modelData = {
-            ...req.body,
-            photoUrl: uploadedImages,
-            coverPhoto: uploadedImages[0],
-            availableSeat : req.body.max_capacity,
-          };
-          // TourPlan: '{"description":"bbb","days":[{"day":"bb","content":"aa"}]}',
-          // TourPlan: '{"description":"cc","days":[{"day":"ccc","content":"cccc"}]}'
-          console.log(modelData,"modelData");
-           console.log( typeof req.body.Tour_id,"modelData",req.body.Tour_id);
-          const newRecord = await req.model.update(req.params.id,modelData);
-          res.status(201).json(newRecord);
+
+          if(req.model.modelName==="user"){
+            const modelData = {
+              ...req.body,
+              photoUrl: uploadedImages,
+              coverPhoto: uploadedImages[0],
+              // availableSeat : req.body.max_capacity
+            };
+            const newRecord = await req.model.update(req.params.id,modelData);
+            res.status(201).json(newRecord);
+
+          }
+          else{
+            const modelData = {
+              ...req.body,
+              photoUrl: uploadedImages,
+              coverPhoto: uploadedImages[0],
+              availableSeat : req.body.max_capacity
+            };
+            const newRecord = await req.model.update(req.params.id,modelData);
+            res.status(201).json(newRecord);
+
+          }
         } catch (error) {
           console.log("error", error);
           next(error);
         }
       } else {
-        // Handle the case when no files are uploaded
         try {
           if (req.body.Seat_price)
             req.body.Seat_price = parseInt(req.body.Seat_price);
@@ -471,7 +484,7 @@ async function handleUpdate(req, res, next) {
             console.log(req.body,"req.body");
           req.body.tour_id = parseInt(req.body.tour_id);
 
-        console.log(req.body.tour_id,"req.body.Tour_id");
+        // console.log(req.body.tour_id,"req.body.Tour_id");
           const newRecord = await req.model.update(req.body.tour_id,req.body);
           console.log(newRecord, "asdasdasd");
           res.status(201).json(newRecord);
