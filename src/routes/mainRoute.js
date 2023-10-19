@@ -356,7 +356,7 @@ async function handleUpdate(req, res, next) {
       }
       const newPeopleInTour = [
         ...existingTour.people_in_tour,
-        req.body.number_of_seats_inTour,
+       parseInt(req.body.number_of_seats_inTour),
       ];
       console.log(req.body.number_of_seats_inTour);
       const sumPeopleInTour = newPeopleInTour.reduce(
@@ -411,10 +411,10 @@ async function handleUpdate(req, res, next) {
         }
       }
     }else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants" || req.model.modelName === "user") {
-      // console.log("out '[object Object]':",req.body);
-      // console.log("Inside '[object Object]':",typeof (req.body.TourPlan[1]));
-      // console.log("0000", req.body.TourPlan);
+    
          console.log("req.filessssssssssssss",req.files)
+         console.log(req.body,"req.body");
+
          console.log("req.fileeeeeeeeeeee",req.file)
       if (req.files && req.files.length > 0) {
         if (req.body.Seat_price)
@@ -458,8 +458,10 @@ async function handleUpdate(req, res, next) {
               ...req.body,
               photoUrl: uploadedImages,
               coverPhoto: uploadedImages[0],
-              availableSeat : req.body.max_capacity
+              // availableSeat : req.body.max_capacity
             };
+            console.log(modelData,"modelData");
+
             const newRecord = await req.model.update(req.params.id,modelData);
             res.status(201).json(newRecord);
 
