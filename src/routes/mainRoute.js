@@ -351,65 +351,78 @@ async function handleUpdate(req, res, next) {
       let updatedRecord = await req.model.update(req.params.id, req.body);
       const existingTour = await TourModel.findByPk(updatedRecord.tourId);
       console.log(existingTour);
+    
       if (!existingTour) {
-        return res.status(404).json({ message: "Tour not found" });
+        req.body.number_of_seats_inTour = 0;
+        req.body.people_in_tour = 0;
       }
-      const newPeopleInTour = [
-        ...existingTour.people_in_tour,
-       parseInt(req.body.number_of_seats_inTour),
-      ];
-      console.log(req.body.number_of_seats_inTour);
-      const sumPeopleInTour = newPeopleInTour.reduce(
-        (sum, value) => sum + value,
-        0
-      );
-      let customerID = updatedRecord.customer_id;
-      let seats = updatedRecord.number_of_seats_inTour;
-      const obj = [
-        {
-          customerID: customerID,
-          seats: seats,
-        },
-      ];
-      console.log(obj);
-      const availableSeat =
-        sumPeopleInTour > 0 ? existingTour.max_capacity - sumPeopleInTour : 1;
-      if (req.body.number_of_seats_inTour) {
-        if (sumPeopleInTour <= existingTour.max_capacity) {
-          await existingTour.update({
-            people_in_tour: newPeopleInTour,
-            availableSeat: availableSeat,
-            tour_customer: [...existingTour.tour_customer, obj],
-          });
-
-          res.status(200).json(updatedRecord);
-
-          const total_tour_price =
-            existingTour.Seat_price * req.body.number_of_seats_inTour;
-
-          const existingBooking = await BookingModel.findByPk(req.params.id);
-
-          existingBooking.total_tour_price = total_tour_price;
-
-          await existingBooking.update({
-            total_tour_price: total_tour_price,
-          });
-
-          const existingPayment = await PaymentModel.findByPk(
-            updatedRecord.paymentID
-          );
-          const total_amount = existingPayment.amount + total_tour_price;
-
-          await existingPayment.update({
-            amount: total_amount,
-          });
-
-          console.log(existingPayment);
-          res.status(200).json(existingTour);
-        } else {
-          res.status(400).json({ message: "Exceeded max capacity" });
+    
+      if (existingTour && existingTour.people_in_tour) {
+        const newPeopleInTour = [
+          ...existingTour.people_in_tour,
+          parseInt(req.body.number_of_seats_inTour),
+        ];
+        console.log(newPeopleInTour, "req.body.number_of_seats_inTour");
+    
+        const sumPeopleInTour = newPeopleInTour.reduce(
+          (sum, value) => sum + value,
+          0
+        );
+    
+        let customerID = updatedRecord.customer_id;
+        let seats = updatedRecord.number_of_seats_inTour;
+        const obj = [
+          {
+            customerID: customerID,
+            seats: seats,
+          },
+        ];
+    
+        console.log(obj);
+    
+        const availableSeat =
+          sumPeopleInTour > 0 ? existingTour.max_capacity - sumPeopleInTour : 1;
+    
+        if (req.body.number_of_seats_inTour) {
+          if (sumPeopleInTour <= existingTour.max_capacity) {
+            await existingTour.update({
+              people_in_tour: newPeopleInTour,
+              availableSeat: availableSeat,
+              tour_customer: [...existingTour.tour_customer, obj],
+            });
+    
+            res.status(200).json(updatedRecord);
+    
+            const total_tour_price =
+              existingTour.Seat_price * req.body.number_of_seats_inTour;
+    
+            const existingBooking = await BookingModel.findByPk(req.params.id);
+    
+            existingBooking.total_tour_price = total_tour_price;
+    
+            await existingBooking.update({
+              total_tour_price: total_tour_price,
+            });
+    
+            const existingPayment = await PaymentModel.findByPk(updatedRecord.paymentID);
+            const total_amount = existingPayment.amount + total_tour_price;
+    
+            await existingPayment.update({
+              amount: total_amount,
+            });
+    
+            console.log(existingPayment);
+            res.status(200).json(existingTour);
+          } else {
+            res.status(400).json({ message: "Exceeded max capacity" });
+          }
         }
+      } else {
+        // Handle the case when existingTour or existingTour.people_in_tour is null
+        res.status(400).json({ message: "Existing tour not found or missing 'people_in_tour'" });
       }
+    
+    
     }else if (req.model.modelName === "rooms" || req.model.modelName === "tour" || req.model.modelName === "Restaurants" || req.model.modelName === "user") {
     
          console.log("req.filessssssssssssss",req.files)
