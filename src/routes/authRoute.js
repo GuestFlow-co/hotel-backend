@@ -31,12 +31,13 @@ authRouter.post("/signup", async (req, res, next) => {
     await userRecord.save();
 
     // Compose the verification email
-    const verificationLink = `http://localhost:${process.env.PORT}/verify?token=${verificationToken}`;
+    const verificationLink = `token=${verificationToken}`;
+    // const verificationLink = `http://localhost:${process.env.PORT}/verify?token=${verificationToken}`;
     const mailOptions = {
       from: process.env.EMAIL,
       to: userRecord.email,
       subject: "Email Verification",
-      html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+      html: `Click <a href="https://hotel-backend.up.railway.app/verify?${verificationLink}">here</a> to verify your email.`,
     };
 
     // Send the verification email
