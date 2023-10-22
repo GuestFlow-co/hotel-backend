@@ -1,5 +1,18 @@
 # Hotel-backend
 
+## Team Member:
+
+1. Farah Yasin
+
+
+2. Ayah Abdelqader
+
+
+3. Saleh Almashni
+
+
+4. Mohammad Aljadaan
+
 ### Users story:
 
 - As a hotel guest, I want to be able to search for available rooms on specific dates, view their descriptions, and book them online, so that I can easily plan and reserve my accommodations.
